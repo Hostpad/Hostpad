@@ -23,6 +23,9 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly LaunchService _launcher;
     private readonly IProcessRunner _runner;
 
+    /// <summary>Guards against re-entering the save prompt while it is saving.</summary>
+    private bool _flushing;
+
     [ObservableProperty]
     private TreeNode? _selectedNode;
 
@@ -50,6 +53,62 @@ public sealed partial class MainViewModel : ObservableObject
     public ConnectionEditorViewModel Editor { get; } = new();
 
     private HostpadDocument Document => _session.Document;
+
+    /// <summary>
+    /// Asked before unsaved edits would be lost. True saves, false discards.
+    /// The window supplies it; the view model does not open dialogs itself.
+    /// </summary>
+    public Func<string, bool>? AskSaveChanges { get; set; }
+
+    partial void OnSelectedNodeChanging(TreeNode? value) => FlushPendingEdits();
+
+    partial void OnSearchTextChanging(string value) => FlushPendingEdits();
+
+    partial void OnGroupConnectionsChanging(bool value) => FlushPendingEdits();
+
+    /// <summary>
+    /// Offers to save the form before something replaces it. Runs before the
+    /// change takes effect, so the editor still holds the connection it belongs to.
+    /// </summary>
+    private void FlushPendingEdits()
+    {
+        if (_flushing || !Editor.IsDirty)
+        {
+            return;
+        }
+
+        if (Editor.ConnectionId is not { } id || Document.FindConnection(id) is not { } connection)
+        {
+            Editor.MarkClean();
+            return;
+        }
+
+        _flushing = true;
+        try
+        {
+            if (AskSaveChanges?.Invoke(connection.Name) == true && Editor.ApplyTo(connection))
+            {
+                _session.Save();
+
+                // Update the row in place rather than rebuilding: a rebuild here
+                // would replace the node the pending selection is about to point at.
+                if (FindNode(Nodes, id) is ConnectionNode node)
+                {
+                    node.Name = connection.Name;
+                    node.Protocol = connection.Protocol;
+                    node.HasJumpHost = connection.Jump is not null;
+                }
+
+                UpdateStatus();
+            }
+
+            Editor.MarkClean();
+        }
+        finally
+        {
+            _flushing = false;
+        }
+    }
 
     partial void OnSelectedNodeChanged(TreeNode? value)
     {
@@ -120,6 +179,10 @@ public sealed partial class MainViewModel : ObservableObject
             StatusText = "Name and hostname are required.";
             return;
         }
+
+        // Before the rebuild, which reselects and would otherwise trip the
+        // unsaved-changes prompt over the edits just saved.
+        Editor.MarkClean();
 
         SaveAndRebuild(selectId: id);
         StatusText = $"Saved {connection.Name}.";

@@ -259,28 +259,34 @@
                                 VerticalScrollBarVisibility="Auto" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,0,0,8">
-                    <ui:Button Style="{StaticResource ToolButton}"
-                               Icon="{ui:SymbolIcon Checkmark24}"
-                               ToolTip="Apply changes"
-                               Command="{Binding ApplyCommand}" />
-                    <ui:Button Style="{StaticResource ToolButton}"
-                               Icon="{ui:SymbolIcon Copy24}"
-                               ToolTip="Duplicate"
-                               Margin="4,0,0,0"
-                               Command="{Binding DuplicateCommand}" />
-                    <ui:Button Style="{StaticResource ToolButton}"
-                               Icon="{ui:SymbolIcon Delete24}"
-                               ToolTip="Delete"
-                               Margin="4,0,0,0"
-                               Command="{Binding DeleteCommand}" />
+                <!-- Editing on the left, connecting on the right: they are
+                     different kinds of action and sat too close together. -->
+                <Grid Grid.Row="5" Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <ui:Button Style="{StaticResource ToolButton}"
+                                   Icon="{ui:SymbolIcon Checkmark24}"
+                                   ToolTip="Apply changes"
+                                   Command="{Binding ApplyCommand}" />
+                        <ui:Button Style="{StaticResource ToolButton}"
+                                   Icon="{ui:SymbolIcon Copy24}"
+                                   ToolTip="Duplicate"
+                                   Margin="4,0,0,0"
+                                   Command="{Binding DuplicateCommand}" />
+                        <ui:Button Style="{StaticResource ToolButton}"
+                                   Icon="{ui:SymbolIcon Delete24}"
+                                   ToolTip="Delete"
+                                   Margin="4,0,0,0"
+                                   Command="{Binding DeleteCommand}" />
+                    </StackPanel>
+
                     <ui:Button Appearance="Primary"
                                Icon="{ui:SymbolIcon PlugConnected24}"
                                Content="Connect"
                                HorizontalAlignment="Right"
-                               Margin="12,0,0,0"
+                               Height="{StaticResource ToolBarHeight}"
+                               Padding="14,0"
                                Command="{Binding ConnectCommand}" />
-                </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
 

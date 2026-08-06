@@ -31,8 +31,24 @@ public partial class MainWindow : FluentWindow
     {
         ViewModel = viewModel;
         DataContext = viewModel;
+
+        viewModel.AskSaveChanges = AskSaveChanges;
+
         InitializeComponent();
     }
+
+    /// <summary>
+    /// Asked when the form has edits that something is about to replace. There
+    /// is no cancel: whatever the user does next still happens, they only choose
+    /// whether the edits survive it.
+    /// </summary>
+    private bool AskSaveChanges(string connectionName) =>
+        MessageBox.Show(
+            this,
+            $"Save the changes to {connectionName}?",
+            "Unsaved changes",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question) == MessageBoxResult.Yes;
 
     public MainViewModel ViewModel { get; }
 

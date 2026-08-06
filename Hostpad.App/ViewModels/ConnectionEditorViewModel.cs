@@ -39,6 +39,22 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
 
     public Guid? ConnectionId { get; private set; }
 
+    /// <summary>
+    /// What was loaded, so edits can be detected by comparison. A flag set from
+    /// property changes would also fire when the form is being populated, and
+    /// would ask about changes the user never made.
+    /// </summary>
+    private (string Name, string Host, string Username, string Password, string Notes, Protocol Protocol) _loaded;
+
+    public bool IsDirty =>
+        HasConnection &&
+        (Name != _loaded.Name ||
+         Host != _loaded.Host ||
+         Username != _loaded.Username ||
+         Password != _loaded.Password ||
+         Notes != _loaded.Notes ||
+         Protocol != _loaded.Protocol);
+
     public void Load(Connection? connection)
     {
         ConnectionId = connection?.Id;
@@ -50,7 +66,12 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
         Password = connection?.Credential.Password ?? string.Empty;
         Notes = connection?.Notes ?? string.Empty;
         Protocol = connection?.Protocol ?? Protocol.Ssh;
+
+        MarkClean();
     }
+
+    /// <summary>Treats the current contents as saved, after applying or discarding.</summary>
+    public void MarkClean() => _loaded = (Name, Host, Username, Password, Notes, Protocol);
 
     /// <summary>Writes the form back onto the connection. Returns false when the form is not valid.</summary>
     public bool ApplyTo(Connection connection)
