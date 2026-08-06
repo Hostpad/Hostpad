@@ -4,9 +4,14 @@ on:
   push:
     tags: ['v*']
 
-  # Lets a release be rehearsed without tagging: the artifact is built and
-  # attached to the run, but no GitHub release is published.
+  # Two uses: rehearse a release without tagging, or attach rebuilt assets to
+  # a release that already exists, which is what the tag input is for.
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag to attach the builds to, e.g. v1.0.0. Leave empty to only build.'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -22,12 +27,13 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Read the version from the tag
+      - name: Read the version
         id: version
         shell: pwsh
         run: |
-          $ref = '${{ github.ref_name }}'
-          # v1.0.0 becomes 1.0.0; a manual run has no tag, so it builds as 0.0.0-dev.
+          # A tag push names the version; a manual run can name it through the
+          # tag input; otherwise there is nothing to go on, so it builds as dev.
+          $ref = if ('${{ github.ref_type }}' -eq 'tag') { '${{ github.ref_name }}' } else { '${{ inputs.tag }}' }
           $version = if ($ref -match '^v(\d+\.\d+\.\d+.*)$') { $Matches[1] } else { '0.0.0-dev' }
           "version=$version" >> $env:GITHUB_OUTPUT
           "Building $version"
@@ -59,8 +65,8 @@ jobs:
           Compress-Archive -Path publish/Hostpad/* -DestinationPath $name
           "name=$name" >> $env:GITHUB_OUTPUT
 
-      # A second, standalone build: one file that runs on a machine with no
-      # .NET installed. Much larger than the zip, which is why both ship.
+      # A standalone build: one file that runs on a machine with no .NET
+      # installed. Much larger than the others, which is why all three ship.
       - name: Publish a standalone executable
         id: standalone
         shell: pwsh
@@ -79,6 +85,25 @@ jobs:
           Move-Item publish/standalone/Hostpad.exe $name
           "name=$name" >> $env:GITHUB_OUTPUT
 
+      # The same app bundled into one file but still using the installed
+      # runtime. No compression here: the SDK only allows it when the build is
+      # self-contained (NETSDK1176).
+      - name: Publish a single-file executable
+        id: singlefile
+        shell: pwsh
+        run: |
+          dotnet publish Hostpad.App/Hostpad.App.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained false `
+            --output publish/singlefile `
+            -p:Version=${{ steps.version.outputs.version }} `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true
+
+          Copy-Item publish/singlefile/Hostpad.exe Hostpad.exe
+          "name=Hostpad.exe" >> $env:GITHUB_OUTPUT
+
       - name: Attach the builds to the run
         uses: actions/upload-artifact@v4
         with:
@@ -86,29 +111,62 @@ jobs:
           path: |
             ${{ steps.package.outputs.name }}
             ${{ steps.standalone.outputs.name }}
+            ${{ steps.singlefile.outputs.name }}
 
-      - name: Publish the release
-        if: startsWith(github.ref, 'refs/tags/v')
+      # Written once so a tag push and a re-upload describe the same assets.
+      - name: Compose the release notes
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $notes = @"
+          @"
           ### Download
 
           | File | Use it when |
           | --- | --- |
-          | ``${{ steps.standalone.outputs.name }}`` | You want a single file to download and run. Nothing to install. |
-          | ``${{ steps.package.outputs.name }}`` | You already have the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) and prefer a small download. Unzip anywhere and run ``Hostpad.exe``. |
+          | ``${{ steps.standalone.outputs.name }}`` | You want a single file that runs on any Windows machine. Nothing to install. |
+          | ``${{ steps.singlefile.outputs.name }}`` | You already have the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) and want a single file. |
+          | ``${{ steps.package.outputs.name }}`` | You have the runtime and prefer the smallest download. Unzip anywhere and run ``Hostpad.exe``. |
 
           Your connections are stored in ``%USERPROFILE%\.hostpad``.
 
           Windows SmartScreen may warn on first run: the build is not code-signed. Choose **More info → Run anyway**.
-          "@
+          "@ | Out-File notes.md -Encoding utf8
 
+      - name: Publish the release
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           gh release create '${{ github.ref_name }}' `
             '${{ steps.standalone.outputs.name }}' `
+            '${{ steps.singlefile.outputs.name }}' `
             '${{ steps.package.outputs.name }}' `
             --title 'Hostpad ${{ steps.version.outputs.version }}' `
-            --notes $notes `
+            --notes-file notes.md `
             --generate-notes
+
+      - name: Attach the builds to an existing release
+        if: github.ref_type != 'tag' && inputs.tag != ''
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload '${{ inputs.tag }}' `
+            '${{ steps.standalone.outputs.name }}' `
+            '${{ steps.singlefile.outputs.name }}' `
+            '${{ steps.package.outputs.name }}' `
+            --clobber
+
+          # The notes list the assets, so they go stale when the assets change.
+          # Rewrite only our table and keep whatever gh generated below it,
+          # since --notes-file would otherwise replace the whole body.
+          $body = gh release view '${{ inputs.tag }}' --json body --jq .body
+          $generated = ''
+          $marker = $body.IndexOf("## What's Changed")
+
+          if ($marker -ge 0) {
+            $generated = "`n`n" + $body.Substring($marker)
+          }
+
+          (Get-Content notes.md -Raw) + $generated | Out-File merged.md -Encoding utf8
+          gh release edit '${{ inputs.tag }}' --notes-file merged.md
