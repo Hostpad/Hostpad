@@ -260,6 +260,30 @@ public sealed partial class MainViewModel : ObservableObject
             : $"Exported {Document.Connections.Count} connections without passwords.";
     }
 
+    /// <summary>Merges an AutoPuTTY list into this vault, optionally taking its tool settings too.</summary>
+    public MergeResult ImportFromAutoPutty(
+        string path,
+        string? password,
+        DuplicateHandling handling,
+        bool includeToolSettings)
+    {
+        var result = new AutoPuttyImporter().Import(path, password);
+        var merged = DocumentTransfer.Merge(Document, result.Document, handling);
+
+        if (includeToolSettings)
+        {
+            AutoPuttyImporter.ApplyConfig(result.Config, _session.Settings);
+            _session.SaveSettings();
+        }
+
+        SaveAndRebuild(selectId: null);
+
+        StatusText = $"Imported from AutoPuTTY: {merged.Added} added, " +
+                     $"{merged.Replaced} replaced, {merged.Skipped} skipped.";
+
+        return merged;
+    }
+
     /// <summary>Merges another vault into this one.</summary>
     public MergeResult ImportFrom(string path, string password, DuplicateHandling handling)
     {

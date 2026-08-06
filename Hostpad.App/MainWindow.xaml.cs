@@ -175,7 +175,7 @@ public partial class MainWindow : FluentWindow
         menu.Items.Add(Item("Options", _ => ShowOptions()));
         menu.Items.Add(new Separator());
         menu.Items.Add(Item("Import…", _ => Import()));
-        menu.Items.Add(Item("Import from AutoPuTTY…", _ => ViewModel.StatusText = "The AutoPuTTY importer is not written yet."));
+        menu.Items.Add(Item("Import from AutoPuTTY…", _ => ImportFromAutoPutty()));
         menu.Items.Add(Item("Export…", _ => Export()));
         menu.Items.Add(new Separator());
         menu.Items.Add(Item("About Hostpad", _ => ViewModel.StatusText = "Hostpad, a connection manager for Windows."));
@@ -235,6 +235,88 @@ public partial class MainWindow : FluentWindow
         }
     }
 
+    private void ImportFromAutoPutty()
+    {
+        var suggested = AppPaths.FindLegacyAutoPuttyFile();
+
+        var dialog = new OpenFileDialog
+        {
+            Title = "Import from AutoPuTTY",
+            Filter = "AutoPuTTY list (autoputty.xml)|autoputty.xml|XML files (*.xml)|*.xml|All files (*.*)|*.*",
+            CheckFileExists = true,
+            FileName = suggested ?? "autoputty.xml",
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        if (AskDuplicateHandling() is not { } handling)
+        {
+            return;
+        }
+
+        var includeSettings = MessageBox.Show(
+            this,
+            "Also take the tool paths and options from the AutoPuTTY file?\n\n" +
+            "This overwrites the matching settings in Options.",
+            "Import from AutoPuTTY",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question) == MessageBoxResult.Yes;
+
+        // Most lists use AutoPuTTY's built-in key, so try without a password
+        // first and only ask when that turns out to be wrong.
+        string? password = null;
+
+        while (true)
+        {
+            try
+            {
+                ViewModel.ImportFromAutoPutty(dialog.FileName, password, handling, includeSettings);
+                return;
+            }
+            catch (AutoPuttyImportException ex)
+                when (ex.Message.Contains("master password", StringComparison.OrdinalIgnoreCase))
+            {
+                password = PasswordDialog.Ask(
+                    this,
+                    password is null
+                        ? "This list is protected by an AutoPuTTY master password. Enter it."
+                        : "That password was not accepted. Try again.");
+
+                if (password is null)
+                {
+                    return;
+                }
+            }
+            catch (Exception ex) when (ex is AutoPuttyImportException or IOException)
+            {
+                MessageBox.Show(this, ex.Message, "Import failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+        }
+    }
+
+    /// <summary>Asks how to treat names that already exist. Null means the user cancelled.</summary>
+    private DuplicateHandling? AskDuplicateHandling()
+    {
+        var choice = MessageBox.Show(
+            this,
+            "Replace connections that already exist with the same name?\n\n" +
+            "Yes replaces them, No keeps what is already here.",
+            "Import",
+            MessageBoxButton.YesNoCancel,
+            MessageBoxImage.Question);
+
+        return choice switch
+        {
+            MessageBoxResult.Yes => DuplicateHandling.Replace,
+            MessageBoxResult.No => DuplicateHandling.Skip,
+            _ => null,
+        };
+    }
+
     private void Import()
     {
         var dialog = new OpenFileDialog
@@ -249,20 +331,11 @@ public partial class MainWindow : FluentWindow
             return;
         }
 
-        var choice = MessageBox.Show(
-            this,
-            "Replace connections that already exist with the same name?\n\n" +
-            "Yes replaces them, No keeps what is already here.",
-            "Import",
-            MessageBoxButton.YesNoCancel,
-            MessageBoxImage.Question);
-
-        if (choice == MessageBoxResult.Cancel)
+        if (AskDuplicateHandling() is not { } handling)
         {
             return;
         }
 
-        var handling = choice == MessageBoxResult.Yes ? DuplicateHandling.Replace : DuplicateHandling.Skip;
         var password = PasswordDialog.Ask(this, "Enter the password for this file.");
 
         if (password is null)

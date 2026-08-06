@@ -46,3 +46,9 @@ desktop.ini
 ## Local user data (never commit real connection files)
 *.hpx
 settings.local.json
+
+## AutoPuTTY lists kept around for import testing. They hold real hosts and
+## credentials encrypted with a key published in AutoPuTTY's own source, so
+## they are effectively plaintext and must never be committed.
+autoputty.xml
+*.autoputty.xml
