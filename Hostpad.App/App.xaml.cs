@@ -130,29 +130,25 @@ public partial class App : Application
                     56,
                     56);
 
-                var chevron = new System.Windows.Media.PathGeometry();
-                var figure = new System.Windows.Media.PathFigure { StartPoint = new Point(84, 88) };
-                figure.Segments.Add(new System.Windows.Media.LineSegment(new Point(128, 128), true));
-                figure.Segments.Add(new System.Windows.Media.LineSegment(new Point(84, 168), true));
-                chevron.Figures.Add(figure);
+                // The two posts of the H.
+                foreach (var left in new[] { 72, 156 })
+                {
+                    context.DrawRoundedRectangle(
+                        System.Windows.Media.Brushes.White,
+                        null,
+                        new Rect(left, 64, 28, 128),
+                        14,
+                        14);
+                }
 
-                context.DrawGeometry(
-                    null,
-                    new System.Windows.Media.Pen(System.Windows.Media.Brushes.White, 24)
-                    {
-                        StartLineCap = System.Windows.Media.PenLineCap.Round,
-                        EndLineCap = System.Windows.Media.PenLineCap.Round,
-                        LineJoin = System.Windows.Media.PenLineJoin.Round,
-                    },
-                    chevron);
-
+                // The bar linking them, which runs past both posts.
                 context.DrawRoundedRectangle(
                     new System.Windows.Media.SolidColorBrush(
                         System.Windows.Media.Color.FromRgb(0xFF, 0xC5, 0x3D)),
                     null,
-                    new Rect(140, 152, 52, 18),
-                    9,
-                    9);
+                    new Rect(56, 114, 144, 28),
+                    14,
+                    14);
 
                 context.Pop();
             }
