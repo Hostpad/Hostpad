@@ -18,8 +18,12 @@
         <local:ProtocolNameConverter x:Key="ProtocolName" />
         <local:BoolToVisibilityConverter x:Key="BoolToVisibility" />
 
-        <Style x:Key="ToolButton" TargetType="ui:Button">
-            <Setter Property="Appearance" Value="Secondary" />
+        <!--
+          BasedOn is load-bearing: without it this replaces WPF-UI's default
+          style outright, taking the control template with it, and the icon
+          renders as an empty box.
+        -->
+        <Style x:Key="ToolButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
             <Setter Property="Padding" Value="7,4" />
             <Setter Property="MinWidth" Value="0" />
         </Style>

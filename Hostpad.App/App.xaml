@@ -9,20 +9,7 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--
-              WPF-UI does not apply the icon font to SymbolIcon on its own here,
-              which leaves every icon as a missing-glyph box. Pointing at the
-              font embedded in the package fixes it for all of them at once.
-            -->
             <FontFamily x:Key="FluentIconFont">pack://application:,,,/Wpf.Ui;component/Resources/Fonts/#FluentSystemIcons-Regular</FontFamily>
-
-            <Style TargetType="{x:Type ui:SymbolIcon}">
-                <Setter Property="FontFamily" Value="{StaticResource FluentIconFont}" />
-            </Style>
-
-            <Style TargetType="{x:Type ui:FontIcon}">
-                <Setter Property="FontFamily" Value="{StaticResource FluentIconFont}" />
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
