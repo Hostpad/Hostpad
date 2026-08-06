@@ -54,7 +54,9 @@ public sealed partial class ConnectionNode : TreeNode
         Protocol.Rdp => SymbolRegular.Desktop24,
         Protocol.Vnc => SymbolRegular.ShareScreenStart24,
         Protocol.Sftp or Protocol.Scp or Protocol.Ftp => SymbolRegular.FolderArrowUp24,
-        _ => SymbolRegular.Code24,
+
+        // A command prompt, not a code file: this opens a terminal session.
+        _ => SymbolRegular.Prompt24,
     };
 
     partial void OnProtocolChanged(Protocol value) => OnPropertyChanged(nameof(Icon));

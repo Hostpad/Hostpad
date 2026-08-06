@@ -3,6 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:local="clr-namespace:Hostpad.App"
                  xmlns:vm="clr-namespace:Hostpad.App.ViewModels"
+                 xmlns:sys="clr-namespace:System;assembly=System.Runtime"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  Title="Hostpad"
                  Width="900"
@@ -23,9 +24,13 @@
           style outright, taking the control template with it, and the icon
           renders as an empty box.
         -->
+        <!-- One height for every control in the list toolbar, so they line up. -->
+        <sys:Double x:Key="ToolBarHeight">34</sys:Double>
+
         <Style x:Key="ToolButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
             <Setter Property="Padding" Value="7,4" />
             <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Height" Value="{StaticResource ToolBarHeight}" />
         </Style>
 
         <Style x:Key="FieldLabel" TargetType="TextBlock">
@@ -68,28 +73,44 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
-                    <ui:Button Style="{StaticResource ToolButton}"
+                <!--
+                  A grid, not a stack: the search box takes whatever width is
+                  left so the flat-list button stays pinned to the right edge of
+                  the pane at any window size.
+                -->
+                <Grid Grid.Row="0" Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ui:Button Grid.Column="0"
+                               Style="{StaticResource ToolButton}"
                                Icon="{ui:SymbolIcon Add24}"
                                ToolTip="New connection in the selected group"
                                Command="{Binding NewConnectionCommand}" />
-                    <ui:Button Style="{StaticResource ToolButton}"
+                    <ui:Button Grid.Column="1"
+                               Style="{StaticResource ToolButton}"
                                Icon="{ui:SymbolIcon FolderAdd24}"
                                ToolTip="New group"
                                Margin="4,0,0,0"
                                Command="{Binding NewGroupCommand}" />
                     <ui:TextBox x:Name="SearchBox"
-                                Width="180"
-                                Margin="6,0,0,0"
+                                Grid.Column="2"
+                                Height="{StaticResource ToolBarHeight}"
+                                Margin="6,0,4,0"
+                                VerticalContentAlignment="Center"
                                 PlaceholderText="Search"
                                 Icon="{ui:SymbolIcon Search24}"
                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
-                    <ui:Button Style="{StaticResource ToolButton}"
+                    <ui:Button Grid.Column="3"
+                               Style="{StaticResource ToolButton}"
                                Icon="{ui:SymbolIcon List24}"
                                ToolTip="Show as a flat list"
-                               Margin="4,0,0,0"
                                Command="{Binding ToggleGroupingCommand}" />
-                </StackPanel>
+                </Grid>
 
                 <Border Grid.Row="1"
                         Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -110,7 +131,12 @@
                               KeyDown="OnTreeKeyDown">
 
                         <TreeView.ItemContainerStyle>
-                            <Style TargetType="TreeViewItem">
+                            <!--
+                              BasedOn again: without it the rows fall back to the
+                              stock WPF style, which paints black text regardless
+                              of the theme.
+                            -->
+                            <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                                 <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                             </Style>
