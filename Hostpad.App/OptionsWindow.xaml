@@ -69,11 +69,11 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Password" Style="{StaticResource Label}" />
-                                <ui:PasswordBox Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                                <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Confirm" Style="{StaticResource Label}" />
-                                <ui:PasswordBox Password="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}" />
+                                <ui:PasswordBox Password="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
 

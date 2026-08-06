@@ -197,7 +197,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Password" Style="{StaticResource FieldLabel}" />
-                        <ui:PasswordBox Password="{Binding Editor.Password, UpdateSourceTrigger=PropertyChanged}"
+                        <ui:PasswordBox Password="{Binding Editor.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         RevealButtonEnabled="True" />
                     </StackPanel>
                 </Grid>
