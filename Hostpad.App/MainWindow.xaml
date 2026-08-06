@@ -1,0 +1,53 @@
+<ui:FluentWindow x:Class="Hostpad.App.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="Hostpad"
+                 Width="1000"
+                 Height="640"
+                 MinWidth="720"
+                 MinHeight="440"
+                 WindowBackdropType="Mica"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowCornerPreference="Round"
+                 WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Hostpad" />
+
+        <Grid Grid.Row="1" Margin="12,0,12,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" MinWidth="180" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Group tree goes here. -->
+            <ui:Card Grid.Column="0">
+                <TextBlock Text="Groups"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Opacity="0.5" />
+            </ui:Card>
+
+            <GridSplitter Grid.Column="1"
+                          Width="8"
+                          Background="Transparent"
+                          HorizontalAlignment="Center" />
+
+            <!-- Connection list goes here. -->
+            <ui:Card Grid.Column="2">
+                <TextBlock Text="Connections"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Opacity="0.5" />
+            </ui:Card>
+        </Grid>
+    </Grid>
+
+</ui:FluentWindow>

@@ -1,0 +1,48 @@
+## Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+publish/
+
+## Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vspscc
+*.vssscc
+
+## Rider / VS Code
+.idea/
+*.sln.iml
+.vscode/*
+!.vscode/extensions.json
+
+## Test / coverage
+[Tt]est[Rr]esult*/
+coverage*.json
+coverage*.xml
+*.coverage
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+!packages/build/
+
+## Signing — never commit certificates
+*.pfx
+*.snk
+*.p12
+
+## OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+## Local user data (never commit real connection files)
+*.hpx
+settings.local.json

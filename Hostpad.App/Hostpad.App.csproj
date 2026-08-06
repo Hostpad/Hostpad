@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Hostpad.App</RootNamespace>
+    <AssemblyName>Hostpad</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Framework-dependent: users install the .NET runtime once, downloads stay small. -->
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hostpad.Core\Hostpad.Core.csproj" />
+  </ItemGroup>
+
+</Project>
