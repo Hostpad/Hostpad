@@ -71,8 +71,10 @@ public sealed partial class ConnectionNode : TreeNode
         // button and the two were being confused.
         Protocol.Sftp or Protocol.Scp or Protocol.Ftp => SymbolRegular.ArrowSwap24,
 
-        // A command prompt, not a code file: this opens a terminal session.
-        _ => SymbolRegular.Prompt24,
+        // A console window, not a code file: this opens a terminal session.
+        // Prompt24 would be the obvious name but the enum and the bundled font
+        // disagree there, and it draws a wand; this one was checked by rendering it.
+        _ => SymbolRegular.WindowConsole20,
     });
 
     /// <summary>Marker shown when the target is only reachable through a bastion.</summary>
