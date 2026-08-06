@@ -1,5 +1,9 @@
 using System.Threading;
 using System.Windows;
+using Hostpad.App.Services;
+using Hostpad.App.ViewModels;
+using Hostpad.Core.Model;
+using Hostpad.Core.Security;
 using Wpf.Ui.Appearance;
 
 namespace Hostpad.App;
@@ -24,8 +28,47 @@ public partial class App : Application
 
         base.OnStartup(e);
 
-        // Follows the Windows light/dark setting until the user overrides it in AppSettings.
-        ApplicationThemeManager.ApplySystemTheme();
+        var session = new VaultSession();
+
+        try
+        {
+            session.Open();
+        }
+        catch (VaultException ex)
+        {
+            // TODO: prompt for the master password instead of giving up once
+            // the Options dialog and the unlock prompt exist.
+            MessageBox.Show(
+                $"Hostpad could not open {session.VaultPath}.\n\n{ex.Message}",
+                "Hostpad",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            Shutdown();
+            return;
+        }
+
+        ApplyTheme(session.Settings.Theme);
+
+        new MainWindow(new MainViewModel(session)).Show();
+    }
+
+    private static void ApplyTheme(AppTheme theme)
+    {
+        switch (theme)
+        {
+            case AppTheme.Light:
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+                break;
+
+            case AppTheme.Dark:
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+                break;
+
+            default:
+                ApplicationThemeManager.ApplySystemTheme();
+                break;
+        }
     }
 
     protected override void OnExit(ExitEventArgs e)

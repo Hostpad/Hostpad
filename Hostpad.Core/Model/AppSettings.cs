@@ -1,6 +1,10 @@
 namespace Hostpad.Core.Model;
 
-public enum ThemeMode
+/// <summary>
+/// Named AppTheme rather than ThemeMode because WPF ships its own
+/// System.Windows.ThemeMode, and the two would collide in every view file.
+/// </summary>
+public enum AppTheme
 {
     System = 0,
     Light = 1,
@@ -25,7 +29,7 @@ public sealed class AppSettings
 
     public int SchemaVersion { get; set; } = CurrentSchemaVersion;
 
-    public ThemeMode Theme { get; set; } = ThemeMode.System;
+    public AppTheme Theme { get; set; } = AppTheme.System;
 
     public PuttySettings Putty { get; set; } = new();
 
