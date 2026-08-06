@@ -16,12 +16,6 @@ public sealed partial class OptionsViewModel : ObservableObject
     private AppTheme _theme;
 
     [ObservableProperty]
-    private bool _rememberWindow;
-
-    [ObservableProperty]
-    private bool _minimizeToTray;
-
-    [ObservableProperty]
     private bool _groupConnections;
 
     [ObservableProperty]
@@ -107,8 +101,6 @@ public sealed partial class OptionsViewModel : ObservableObject
         var settings = session.Settings;
 
         Theme = settings.Theme;
-        RememberWindow = settings.Window.Width is not null;
-        MinimizeToTray = settings.MinimizeToTray;
         GroupConnections = settings.GroupConnections;
 
         UseMasterPassword = session.HasMasterPassword;
@@ -194,7 +186,6 @@ public sealed partial class OptionsViewModel : ObservableObject
         var settings = _session.Settings;
 
         settings.Theme = Theme;
-        settings.MinimizeToTray = MinimizeToTray;
         settings.GroupConnections = GroupConnections;
         settings.RequirePasswordOnStartup = UseMasterPassword && AskAtStartup;
 

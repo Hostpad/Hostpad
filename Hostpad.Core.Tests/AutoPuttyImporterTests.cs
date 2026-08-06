@@ -247,7 +247,6 @@ public sealed class AutoPuttyImporterTests : IDisposable
                 ["puttykeyfile"] = @"C:\keys\id_rsa.ppk",
                 ["winscp"] = @"C:\tools\winscp.exe",
                 ["rdsize"] = "1920x1080",
-                ["minimize"] = "True",
             },
             settings);
 
@@ -256,7 +255,6 @@ public sealed class AutoPuttyImporterTests : IDisposable
         Assert.Equal(@"C:\keys\id_rsa.ppk", settings.Putty.KeyFilePath);
         Assert.Equal(@"C:\tools\winscp.exe", settings.WinScp.Path);
         Assert.Equal("1920x1080", settings.RemoteDesktop.ScreenSize);
-        Assert.True(settings.MinimizeToTray);
     }
 
     /// <summary>A partial config must not reset the settings it says nothing about.</summary>

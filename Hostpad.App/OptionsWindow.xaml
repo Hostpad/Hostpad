@@ -102,7 +102,6 @@
 
                         <TextBlock Text="Other" Style="{StaticResource Section}" />
                         <CheckBox Content="Group connections by folder" IsChecked="{Binding GroupConnections}" />
-                        <CheckBox Content="Minimize to system tray" IsChecked="{Binding MinimizeToTray}" />
 
                         <Border Margin="0,14,0,0"
                                 Padding="10"

@@ -281,7 +281,7 @@ public partial class MainWindow : FluentWindow
         menu.Items.Add(Item("Import from AutoPuTTY…", _ => ImportFromAutoPutty()));
         menu.Items.Add(Item("Export…", _ => Export()));
         menu.Items.Add(new Separator());
-        menu.Items.Add(Item("About Hostpad", _ => ViewModel.StatusText = "Hostpad, a connection manager for Windows."));
+        menu.Items.Add(Item("About Hostpad", _ => new AboutWindow { Owner = this }.ShowDialog()));
     }
 
     private void ShowOptions()

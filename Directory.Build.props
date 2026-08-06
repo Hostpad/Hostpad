@@ -16,8 +16,8 @@
   <PropertyGroup>
     <Product>Hostpad</Product>
     <Company>goodmagma</Company>
-    <Authors>goodmagma</Authors>
-    <Copyright>Copyright (C) 2026 goodmagma</Copyright>
+    <Authors>Denis Torresan</Authors>
+    <Copyright>Copyright (C) 2026 Denis Torresan</Copyright>
     <VersionPrefix>0.1.0</VersionPrefix>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/goodmagma/Hostpad</RepositoryUrl>

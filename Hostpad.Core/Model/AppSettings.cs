@@ -44,9 +44,6 @@ public sealed class AppSettings
     /// <summary>Absolute path to the encrypted document. Null means the default location.</summary>
     public string? DocumentPath { get; set; }
 
-    /// <summary>Hide to the notification area instead of the taskbar when minimized.</summary>
-    public bool MinimizeToTray { get; set; }
-
     /// <summary>
     /// Ask for the master password before showing the window. When false the
     /// vault is still encrypted — it is simply unlocked through the Windows

@@ -176,7 +176,6 @@ public sealed class AutoPuttyImporter
         SetText(config, "winscpkeyfile", value => settings.WinScp.KeyFilePath = value);
         SetFlag(config, "winscppassive", value => settings.WinScp.PassiveMode = value);
 
-        SetFlag(config, "minimize", value => settings.MinimizeToTray = value);
         SetFlag(config, "multicolumn", value => settings.GroupConnections = value);
     }
 
