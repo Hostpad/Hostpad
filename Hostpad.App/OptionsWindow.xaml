@@ -1,0 +1,223 @@
+<ui:FluentWindow x:Class="Hostpad.App.OptionsWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:local="clr-namespace:Hostpad.App"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="Options"
+                 Width="560"
+                 Height="560"
+                 ResizeMode="NoResize"
+                 WindowBackdropType="Mica"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowCornerPreference="Round"
+                 WindowStartupLocation="CenterOwner">
+
+    <ui:FluentWindow.Resources>
+        <local:ThemeNameConverter x:Key="ThemeName" />
+
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,0,0,3" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
+
+        <Style x:Key="Section" TargetType="TextBlock" BasedOn="{StaticResource Label}">
+            <Setter Property="Margin" Value="0,10,0,6" />
+        </Style>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <Style x:Key="BrowseButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
+            <Setter Property="Content" Value="Select" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="Padding" Value="10,4" />
+        </Style>
+    </ui:FluentWindow.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Options" ShowMaximize="False" ShowMinimize="False" />
+
+        <TabControl Grid.Row="1" Margin="12,0,12,0">
+
+            <TabItem Header="General">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,10,10,4">
+                    <StackPanel>
+                        <TextBlock Text="Master password" Style="{StaticResource Label}" />
+
+                        <CheckBox IsChecked="{Binding UseMasterPassword}">
+                            <StackPanel>
+                                <TextBlock Text="Use a master password" />
+                                <TextBlock Text="Lets this file be opened on another computer"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            </StackPanel>
+                        </CheckBox>
+
+                        <Grid Margin="26,4,0,4" IsEnabled="{Binding UseMasterPassword}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Password" Style="{StaticResource Label}" />
+                                <ui:PasswordBox Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Confirm" Style="{StaticResource Label}" />
+                                <ui:PasswordBox Password="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <CheckBox Margin="26,0,0,0"
+                                  IsChecked="{Binding AskAtStartup}"
+                                  IsEnabled="{Binding UseMasterPassword}">
+                            <StackPanel>
+                                <TextBlock Text="Ask for it every time Hostpad starts" />
+                                <TextBlock Text="Off means this computer unlocks the file on its own"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            </StackPanel>
+                        </CheckBox>
+
+                        <TextBlock Text="Appearance" Style="{StaticResource Section}" />
+                        <ComboBox ItemsSource="{Binding Themes}"
+                                  SelectedItem="{Binding Theme}"
+                                  Width="200"
+                                  HorizontalAlignment="Left">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource ThemeName}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Text="Other" Style="{StaticResource Section}" />
+                        <CheckBox Content="Group connections by folder" IsChecked="{Binding GroupConnections}" />
+                        <CheckBox Content="Minimize to system tray" IsChecked="{Binding MinimizeToTray}" />
+
+                        <Border Margin="0,14,0,0"
+                                Padding="10"
+                                CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorDefaultBrush}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding ProtectionSummary}" TextWrapping="Wrap" FontSize="11" />
+                                <TextBlock Text="{Binding VaultPath}"
+                                           TextWrapping="Wrap"
+                                           FontSize="11"
+                                           Margin="0,6,0,0"
+                                           FontFamily="Cascadia Mono, Consolas"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="PuTTY">
+                <StackPanel Margin="4,10,10,4">
+                    <TextBlock Text="Path (putty.exe)" Style="{StaticResource Label}" />
+                    <DockPanel>
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowsePutty" />
+                        <ui:TextBox Text="{Binding PuttyPath, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+
+                    <CheckBox Content="Execute commands" Margin="0,10,0,4" IsChecked="{Binding PuttyExecuteCommands}" />
+                    <ui:TextBox Text="{Binding PuttyCommand, UpdateSourceTrigger=PropertyChanged}"
+                                IsEnabled="{Binding PuttyExecuteCommands}" />
+
+                    <CheckBox Content="Private key file for authentication" Margin="0,10,0,4" IsChecked="{Binding PuttyUseKeyFile}" />
+                    <DockPanel IsEnabled="{Binding PuttyUseKeyFile}">
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowsePuttyKey" />
+                        <ui:TextBox Text="{Binding PuttyKeyFile, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+
+                    <TextBlock Text="Other" Style="{StaticResource Section}" />
+                    <CheckBox Content="X11 forwarding" IsChecked="{Binding PuttyX11}" />
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Remote Desktop">
+                <StackPanel Margin="4,10,10,4">
+                    <TextBlock Text="Path (mstsc.exe)" Style="{StaticResource Label}" />
+                    <DockPanel>
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseRdp" />
+                        <ui:TextBox Text="{Binding RdpPath, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+
+                    <TextBlock Text="Where to keep generated .rdp files" Style="{StaticResource Section}" />
+                    <DockPanel>
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseRdpOutput" />
+                        <ui:TextBox Text="{Binding RdpOutputPath, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="Temporary, deleted after launch" />
+                    </DockPanel>
+
+                    <TextBlock Text="Screen size" Style="{StaticResource Section}" />
+                    <ui:TextBox Text="{Binding RdpScreenSize, UpdateSourceTrigger=PropertyChanged}"
+                                PlaceholderText="1920x1080"
+                                Width="200"
+                                HorizontalAlignment="Left" />
+
+                    <TextBlock Text="Other" Style="{StaticResource Section}" />
+                    <CheckBox Content="Admin session" IsChecked="{Binding RdpAdmin}" />
+                    <CheckBox Content="Mount local drives" IsChecked="{Binding RdpMountDrives}" />
+                    <CheckBox Content="Multiple monitors" IsChecked="{Binding RdpMultiMon}" />
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="VNC">
+                <StackPanel Margin="4,10,10,4">
+                    <TextBlock Text="Path (vncviewer.exe)" Style="{StaticResource Label}" />
+                    <DockPanel>
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseVnc" />
+                        <ui:TextBox Text="{Binding VncPath, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+
+                    <TextBlock Text="Where to keep generated .vnc files" Style="{StaticResource Section}" />
+                    <DockPanel>
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseVncOutput" />
+                        <ui:TextBox Text="{Binding VncOutputPath, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="Temporary, deleted after launch" />
+                    </DockPanel>
+
+                    <TextBlock Text="Other" Style="{StaticResource Section}" />
+                    <CheckBox Content="Full screen" IsChecked="{Binding VncFullScreen}" />
+                    <CheckBox Content="View only" IsChecked="{Binding VncViewOnly}" />
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="WinSCP">
+                <StackPanel Margin="4,10,10,4">
+                    <TextBlock Text="Path (winscp.exe)" Style="{StaticResource Label}" />
+                    <DockPanel>
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseWinScp" />
+                        <ui:TextBox Text="{Binding WinScpPath, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+
+                    <CheckBox Content="Private key file for authentication" Margin="0,10,0,4" IsChecked="{Binding WinScpUseKeyFile}" />
+                    <DockPanel IsEnabled="{Binding WinScpUseKeyFile}">
+                        <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseWinScpKey" />
+                        <ui:TextBox Text="{Binding WinScpKeyFile, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+
+                    <TextBlock Text="Other" Style="{StaticResource Section}" />
+                    <CheckBox Content="Passive mode (FTP only)" IsChecked="{Binding WinScpPassive}" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="12">
+            <ui:Button Content="Cancel" Click="OnCancel" Padding="14,5" />
+            <ui:Button Content="OK" Appearance="Primary" Click="OnOk" Margin="8,0,0,0" Padding="18,5" />
+        </StackPanel>
+    </Grid>
+
+</ui:FluentWindow>

@@ -31,6 +31,13 @@ public sealed class DocumentStore
         return envelope.HasPassword && !CanOpenWithDpapi(envelope);
     }
 
+    /// <summary>How the file on disk is protected. Reads the header only.</summary>
+    public (bool HasPassword, bool HasDpapi) ProtectionInfo()
+    {
+        var envelope = ReadEnvelope();
+        return (envelope.HasPassword, envelope.HasDpapi);
+    }
+
     /// <exception cref="VaultAuthenticationException">Wrong or missing master password.</exception>
     /// <exception cref="VaultFormatException">Not a vault, corrupted, or written by a newer build.</exception>
     public HostpadDocument Load(string? password = null)

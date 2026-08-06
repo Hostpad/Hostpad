@@ -4,7 +4,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Hostpad.App.ViewModels;
 using Hostpad.Core.Model;
+using Hostpad.Core.Security;
+using Hostpad.Core.Storage;
+using Microsoft.Win32;
 using Wpf.Ui.Controls;
+using IOException = System.IO.IOException;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxImage = System.Windows.MessageBoxImage;
+using MessageBoxResult = System.Windows.MessageBoxResult;
 using MenuItem = System.Windows.Controls.MenuItem;
 using TextBox = System.Windows.Controls.TextBox;
 using TreeViewItem = System.Windows.Controls.TreeViewItem;
@@ -164,13 +172,112 @@ public partial class MainWindow : FluentWindow
     {
         var menu = new ContextMenu { PlacementTarget = (UIElement)sender, IsOpen = true };
 
-        menu.Items.Add(Item("Options", _ => ViewModel.StatusText = "Options are not built yet."));
+        menu.Items.Add(Item("Options", _ => ShowOptions()));
         menu.Items.Add(new Separator());
-        menu.Items.Add(Item("Import…", _ => ViewModel.StatusText = "Import is not wired up yet."));
+        menu.Items.Add(Item("Import…", _ => Import()));
         menu.Items.Add(Item("Import from AutoPuTTY…", _ => ViewModel.StatusText = "The AutoPuTTY importer is not written yet."));
-        menu.Items.Add(Item("Export…", _ => ViewModel.StatusText = "Export is not wired up yet."));
+        menu.Items.Add(Item("Export…", _ => Export()));
         menu.Items.Add(new Separator());
         menu.Items.Add(Item("About Hostpad", _ => ViewModel.StatusText = "Hostpad, a connection manager for Windows."));
+    }
+
+    private void ShowOptions()
+    {
+        var dialog = new OptionsWindow(new OptionsViewModel(ViewModel.Session)) { Owner = this };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        App.ApplyTheme(ViewModel.Session.Settings.Theme);
+        ViewModel.SettingsChanged();
+        ViewModel.StatusText = "Options saved.";
+    }
+
+    private void Export()
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "Export connections",
+            Filter = "Hostpad vault (*.hpx)|*.hpx",
+            FileName = "connections.hpx",
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        // An export always carries a password: it is meant to leave this machine,
+        // so it cannot rely on the Windows account that protects the local vault.
+        var password = PasswordDialog.Ask(this, "Choose a password for the exported file. Whoever opens it will need this password.");
+        if (password is null)
+        {
+            return;
+        }
+
+        var includePasswords = MessageBox.Show(
+            this,
+            "Include the saved passwords for each connection?\n\n" +
+            "Choose No to share the server list without handing over credentials.",
+            "Export",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question) == MessageBoxResult.Yes;
+
+        try
+        {
+            ViewModel.ExportTo(dialog.FileName, password, includePasswords);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            MessageBox.Show(this, ex.Message, "Export failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void Import()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "Import connections",
+            Filter = "Hostpad vault (*.hpx)|*.hpx|All files (*.*)|*.*",
+            CheckFileExists = true,
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        var choice = MessageBox.Show(
+            this,
+            "Replace connections that already exist with the same name?\n\n" +
+            "Yes replaces them, No keeps what is already here.",
+            "Import",
+            MessageBoxButton.YesNoCancel,
+            MessageBoxImage.Question);
+
+        if (choice == MessageBoxResult.Cancel)
+        {
+            return;
+        }
+
+        var handling = choice == MessageBoxResult.Yes ? DuplicateHandling.Replace : DuplicateHandling.Skip;
+        var password = PasswordDialog.Ask(this, "Enter the password for this file.");
+
+        if (password is null)
+        {
+            return;
+        }
+
+        try
+        {
+            ViewModel.ImportFrom(dialog.FileName, password, handling);
+        }
+        catch (VaultException ex)
+        {
+            MessageBox.Show(this, ex.Message, "Import failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     private void StartRename()

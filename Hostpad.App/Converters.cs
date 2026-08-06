@@ -15,6 +15,22 @@ public sealed class ProtocolNameConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+public sealed class ThemeNameConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is AppTheme theme
+            ? theme switch
+            {
+                AppTheme.Light => "Light",
+                AppTheme.Dark => "Dark",
+                _ => "Follow Windows",
+            }
+            : string.Empty;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
 public sealed class BoolToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

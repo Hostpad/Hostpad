@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Hostpad.App.Services;
 using Hostpad.Core.Launching;
 using Hostpad.Core.Model;
+using Hostpad.Core.Storage;
 
 namespace Hostpad.App.ViewModels;
 
@@ -240,6 +241,42 @@ public sealed partial class MainViewModel : ObservableObject
 
         group.ParentId = targetParentId;
         SaveAndRebuild(selectId: groupId);
+    }
+
+    /// <summary>Exposed so the Options dialog can edit the same session this window uses.</summary>
+    public VaultSession Session => _session;
+
+    /// <summary>Writes a password-protected copy for sharing.</summary>
+    public void ExportTo(string path, string password, bool includePasswords)
+    {
+        DocumentTransfer.Export(
+            Document,
+            path,
+            password,
+            new ExportOptions { IncludePasswords = includePasswords });
+
+        StatusText = includePasswords
+            ? $"Exported {Document.Connections.Count} connections with their passwords."
+            : $"Exported {Document.Connections.Count} connections without passwords.";
+    }
+
+    /// <summary>Merges another vault into this one.</summary>
+    public MergeResult ImportFrom(string path, string password, DuplicateHandling handling)
+    {
+        var incoming = DocumentTransfer.Import(path, password);
+        var result = DocumentTransfer.Merge(Document, incoming, handling);
+
+        SaveAndRebuild(selectId: null);
+        StatusText = $"Imported {result.Added} added, {result.Replaced} replaced, {result.Skipped} skipped.";
+
+        return result;
+    }
+
+    /// <summary>Re-reads the settings that affect the list, after Options was accepted.</summary>
+    public void SettingsChanged()
+    {
+        GroupConnections = _session.Settings.GroupConnections;
+        RefreshTree();
     }
 
     /// <summary>The group a connection currently lives in, or null when it sits at the root.</summary>
