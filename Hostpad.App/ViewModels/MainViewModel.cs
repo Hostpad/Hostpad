@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hostpad.App.Services;
+using Hostpad.Core.Launching;
 using Hostpad.Core.Model;
 
 namespace Hostpad.App.ViewModels;
@@ -18,6 +19,8 @@ namespace Hostpad.App.ViewModels;
 public sealed partial class MainViewModel : ObservableObject
 {
     private readonly VaultSession _session;
+    private readonly LaunchService _launcher;
+    private readonly IProcessRunner _runner;
 
     [ObservableProperty]
     private TreeNode? _selectedNode;
@@ -31,9 +34,11 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _groupConnections = true;
 
-    public MainViewModel(VaultSession session)
+    public MainViewModel(VaultSession session, IProcessRunner? runner = null, LaunchService? launcher = null)
     {
         _session = session;
+        _runner = runner ?? new ProcessRunner();
+        _launcher = launcher ?? new LaunchService();
         GroupConnections = session.Settings.GroupConnections;
         RebuildTree();
         UpdateStatus();
@@ -178,11 +183,22 @@ public sealed partial class MainViewModel : ObservableObject
             return;
         }
 
-        connection.LastUsedUtc = DateTimeOffset.UtcNow;
-        _session.Save();
+        try
+        {
+            var plan = _launcher.CreatePlan(connection, protocol, _session.Settings);
+            _runner.Start(plan);
 
-        // TODO: hand off to the launcher once it exists.
-        StatusText = $"Launching {connection.Name} with {protocol.DisplayName()} is not wired up yet.";
+            connection.LastUsedUtc = DateTimeOffset.UtcNow;
+            _session.Save();
+
+            StatusText = $"Opened {connection.Name} with {protocol.DisplayName()}.";
+        }
+        catch (LaunchException ex)
+        {
+            // A missing tool or a blank hostname is an everyday mistake, not a
+            // crash: say what went wrong and leave the selection alone.
+            StatusText = ex.Message;
+        }
     }
 
     [RelayCommand]
