@@ -55,10 +55,11 @@ public sealed class Connection
 
     public bool HasTag(string tag) => Tags.Contains(tag, StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>Copy carrying a fresh <see cref="Id"/>, for the duplicate action.</summary>
-    public Connection DuplicateAs(string newName) => new()
+    /// <summary>Independent copy keeping the same identity, for export and undo.</summary>
+    public Connection Clone() => new()
     {
-        Name = newName,
+        Id = Id,
+        Name = Name,
         Host = Host,
         Port = Port,
         Protocol = Protocol,
@@ -69,7 +70,30 @@ public sealed class Connection
         Jump = Jump?.Clone(),
         Overrides = new Dictionary<string, string>(Overrides, StringComparer.OrdinalIgnoreCase),
         Notes = Notes,
+        CreatedUtc = CreatedUtc,
+        ModifiedUtc = ModifiedUtc,
+        LastUsedUtc = LastUsedUtc,
     };
+
+    /// <summary>Copy carrying a fresh <see cref="Id"/>, for the duplicate action.</summary>
+    public Connection DuplicateAs(string newName)
+    {
+        var copy = Clone();
+        return new Connection
+        {
+            Name = newName,
+            Host = copy.Host,
+            Port = copy.Port,
+            Protocol = copy.Protocol,
+            GroupId = copy.GroupId,
+            Tags = copy.Tags,
+            ProfileId = copy.ProfileId,
+            Credential = copy.Credential,
+            Jump = copy.Jump,
+            Overrides = copy.Overrides,
+            Notes = copy.Notes,
+        };
+    }
 
     public override string ToString() => $"{Name} ({Protocol} {Host}:{EffectivePort})";
 }
