@@ -1,12 +1,20 @@
-# Hostpad
+<p align="center">
+  <img src="docs/icon.png" alt="" width="112" height="112">
+</p>
 
-A connection manager for Windows. Keep every remote machine in one place and
-open it with a double click — SSH, SFTP, SCP, FTP, Remote Desktop or VNC,
-through the client tools you already use.
+<h1 align="center">Hostpad</h1>
+
+<p align="center">
+  A connection manager for Windows. Keep every remote machine in one place and
+  open it with a double click — SSH, SFTP, SCP, FTP, Remote Desktop or VNC,
+  through the client tools you already use.
+</p>
+
+<p align="center">
+  <a href="https://github.com/goodmagma/Hostpad/releases/latest"><strong>Download the latest release</strong></a>
+</p>
 
 ![Hostpad](docs/screenshot.png)
-
-> **Status:** early development. Usable, but not yet released.
 
 ## Why
 
