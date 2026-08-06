@@ -62,7 +62,7 @@
 
         <Grid Grid.Row="1" Margin="8,0,8,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="320" MinWidth="200" />
+                <ColumnDefinition x:Name="ListColumn" Width="320" MinWidth="200" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="260" />
             </Grid.ColumnDefinitions>

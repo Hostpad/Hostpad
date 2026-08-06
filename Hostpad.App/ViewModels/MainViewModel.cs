@@ -70,7 +70,7 @@ public sealed partial class MainViewModel : ObservableObject
     /// Offers to save the form before something replaces it. Runs before the
     /// change takes effect, so the editor still holds the connection it belongs to.
     /// </summary>
-    private void FlushPendingEdits()
+    public void FlushPendingEdits()
     {
         if (_flushing || !Editor.IsDirty)
         {

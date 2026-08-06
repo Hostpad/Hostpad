@@ -35,6 +35,93 @@ public partial class MainWindow : FluentWindow
         viewModel.AskSaveChanges = AskSaveChanges;
 
         InitializeComponent();
+        RestoreWindowState();
+    }
+
+    /// <summary>
+    /// Puts the window back where it was. A saved position is only honoured if
+    /// it still lands on a visible screen: monitors get unplugged, and a window
+    /// restored onto one that is gone is a window the user cannot reach.
+    /// </summary>
+    private void RestoreWindowState()
+    {
+        var state = ViewModel.Session.Settings.Window;
+
+        if (state.Width is > 0 and { } width && state.Height is > 0 and { } height)
+        {
+            Width = width;
+            Height = height;
+        }
+
+        if (state.Left is { } left && state.Top is { } top && IsOnScreen(left, top))
+        {
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            Left = left;
+            Top = top;
+        }
+
+        if (state.IsMaximized)
+        {
+            WindowState = System.Windows.WindowState.Maximized;
+        }
+
+        if (state.ListPaneWidth > 0)
+        {
+            ListColumn.Width = new GridLength(state.ListPaneWidth);
+        }
+    }
+
+    private static bool IsOnScreen(double left, double top)
+    {
+        // A margin, so a window nudged slightly off the edge still counts.
+        const double Margin = 64;
+
+        var screen = new Rect(
+            SystemParameters.VirtualScreenLeft,
+            SystemParameters.VirtualScreenTop,
+            SystemParameters.VirtualScreenWidth,
+            SystemParameters.VirtualScreenHeight);
+
+        screen.Inflate(-Margin, -Margin);
+
+        return screen.Contains(left, top);
+    }
+
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        // Closing is the last chance to keep what is in the form.
+        ViewModel.FlushPendingEdits();
+        SaveWindowState();
+
+        base.OnClosing(e);
+    }
+
+    private void SaveWindowState()
+    {
+        var state = ViewModel.Session.Settings.Window;
+
+        // RestoreBounds holds where the window sits when it is not maximized,
+        // which is what should come back after a restore.
+        var bounds = WindowState == System.Windows.WindowState.Normal
+            ? new Rect(Left, Top, Width, Height)
+            : RestoreBounds;
+
+        if (bounds is { Width: > 0, Height: > 0 })
+        {
+            state.Left = bounds.Left;
+            state.Top = bounds.Top;
+            state.Width = bounds.Width;
+            state.Height = bounds.Height;
+        }
+
+        state.IsMaximized = WindowState == System.Windows.WindowState.Maximized;
+
+        if (ListColumn.ActualWidth > 0)
+        {
+            state.ListPaneWidth = ListColumn.ActualWidth;
+        }
+
+        ViewModel.Session.SaveSettings();
     }
 
     /// <summary>
