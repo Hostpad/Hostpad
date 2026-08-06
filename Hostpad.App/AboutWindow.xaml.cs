@@ -14,7 +14,7 @@ public partial class AboutWindow : FluentWindow
 
     /// <summary>
     /// The informational version carries the build metadata the SDK adds, such
-    /// as "0.1.0+abc1234"; only the part before the plus is worth showing.
+    /// as "1.0.0+abc1234"; only the part before the plus is worth showing.
     /// </summary>
     private static string ReadVersion()
     {

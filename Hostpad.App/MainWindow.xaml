@@ -126,6 +126,7 @@
                               SelectedItemChanged="OnTreeSelectionChanged"
                               MouseMove="OnTreeMouseMove"
                               PreviewMouseLeftButtonDown="OnTreeMouseDown"
+                              PreviewMouseRightButtonDown="OnTreeRightButtonDown"
                               MouseDoubleClick="OnTreeDoubleClick"
                               DragOver="OnTreeDragOver"
                               Drop="OnTreeDrop"

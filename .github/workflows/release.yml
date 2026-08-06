@@ -27,7 +27,7 @@ jobs:
         shell: pwsh
         run: |
           $ref = '${{ github.ref_name }}'
-          # v0.1.0 becomes 0.1.0; a manual run has no tag, so it builds as 0.0.0-dev.
+          # v1.0.0 becomes 1.0.0; a manual run has no tag, so it builds as 0.0.0-dev.
           $version = if ($ref -match '^v(\d+\.\d+\.\d+.*)$') { $Matches[1] } else { '0.0.0-dev' }
           "version=$version" >> $env:GITHUB_OUTPUT
           "Building $version"
@@ -59,11 +59,33 @@ jobs:
           Compress-Archive -Path publish/Hostpad/* -DestinationPath $name
           "name=$name" >> $env:GITHUB_OUTPUT
 
-      - name: Attach the build to the run
+      # A second, standalone build: one file that runs on a machine with no
+      # .NET installed. Much larger than the zip, which is why both ship.
+      - name: Publish a standalone executable
+        id: standalone
+        shell: pwsh
+        run: |
+          dotnet publish Hostpad.App/Hostpad.App.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            --output publish/standalone `
+            -p:Version=${{ steps.version.outputs.version }} `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true
+
+          $name = "Hostpad-${{ steps.version.outputs.version }}-win-x64.exe"
+          Move-Item publish/standalone/Hostpad.exe $name
+          "name=$name" >> $env:GITHUB_OUTPUT
+
+      - name: Attach the builds to the run
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.package.outputs.name }}
-          path: ${{ steps.package.outputs.name }}
+          name: Hostpad-${{ steps.version.outputs.version }}
+          path: |
+            ${{ steps.package.outputs.name }}
+            ${{ steps.standalone.outputs.name }}
 
       - name: Publish the release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -72,12 +94,20 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $notes = @"
-          Requires the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0).
+          ### Download
 
-          Unzip anywhere and run ``Hostpad.exe``. Your connections are stored in ``%USERPROFILE%\.hostpad``.
+          | File | Use it when |
+          | --- | --- |
+          | ``${{ steps.standalone.outputs.name }}`` | You want a single file to download and run. Nothing to install. |
+          | ``${{ steps.package.outputs.name }}`` | You already have the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) and prefer a small download. Unzip anywhere and run ``Hostpad.exe``. |
+
+          Your connections are stored in ``%USERPROFILE%\.hostpad``.
+
+          Windows SmartScreen may warn on first run: the build is not code-signed. Choose **More info → Run anyway**.
           "@
 
           gh release create '${{ github.ref_name }}' `
+            '${{ steps.standalone.outputs.name }}' `
             '${{ steps.package.outputs.name }}' `
             --title 'Hostpad ${{ steps.version.outputs.version }}' `
             --notes $notes `

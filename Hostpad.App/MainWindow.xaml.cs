@@ -190,6 +190,41 @@ public partial class MainWindow : FluentWindow
     {
         _mouseDownAt = e.GetPosition(null);
         _mouseDownNode = NodeUnder(e.OriginalSource);
+
+        if (_mouseDownNode is null)
+        {
+            ClearSelection();
+        }
+    }
+
+    /// <summary>
+    /// WPF leaves the selection alone on a right click, so the menu would
+    /// describe whatever was selected before rather than what was clicked.
+    /// Select the row under the pointer, and drop the selection entirely when
+    /// the click lands on empty space, which is what asks for the "new" menu.
+    /// </summary>
+    private void OnTreeRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (ItemUnder(e.OriginalSource) is { } item)
+        {
+            item.IsSelected = true;
+            item.Focus();
+            return;
+        }
+
+        ClearSelection();
+    }
+
+    private void ClearSelection()
+    {
+        // The container mirrors TreeNode.IsSelected two ways, so clearing the
+        // node is what actually clears TreeView.SelectedItem.
+        if (Tree.SelectedItem is TreeNode selected)
+        {
+            selected.IsSelected = false;
+        }
+
+        ViewModel.SelectedNode = null;
     }
 
     private void OnTreeMouseMove(object sender, MouseEventArgs e)
@@ -528,7 +563,10 @@ public partial class MainWindow : FluentWindow
     }
 
     /// <summary>Walks up from the clicked element to the tree row it belongs to.</summary>
-    private static TreeNode? NodeUnder(object? source)
+    private static TreeNode? NodeUnder(object? source) =>
+        ItemUnder(source)?.DataContext as TreeNode;
+
+    private static TreeViewItem? ItemUnder(object? source)
     {
         var current = source as DependencyObject;
 
@@ -539,6 +577,6 @@ public partial class MainWindow : FluentWindow
                 : LogicalTreeHelper.GetParent(current);
         }
 
-        return (current as TreeViewItem)?.DataContext as TreeNode;
+        return current as TreeViewItem;
     }
 }
