@@ -25,19 +25,60 @@ SFTP, FTP, RDP or VNC sessions with a double click.
 
 ## Building
 
+Building needs the .NET 10 **SDK**, which is a different package from the
+runtime listed above. Install it with winget:
+
+```bash
+winget install Microsoft.DotNet.SDK.10
+```
+
+Open a new terminal afterwards, so the updated PATH is picked up, and check the
+SDK is visible:
+
+```bash
+dotnet --list-sdks
+```
+
+The output must include a `10.x` entry. If `dotnet` is found but no 10.x SDK is
+listed, only the runtime is installed and the build will fail on the target
+framework.
+
+Then, from the repository root:
+
 ```bash
 dotnet build
+```
+
+```bash
 dotnet test
+```
+
+```bash
 dotnet run --project Hostpad.App
 ```
 
-Requires the .NET 10 SDK.
+Visual Studio 2022 17.14 or later opens `Hostpad.sln` directly. Set
+`Hostpad.App` as the startup project.
+
+Warnings are errors in this repository, so a build that prints nothing is a
+build that passed.
 
 ## Migrating from AutoPuTTY
 
-Hostpad imports an existing `autoputty.xml` on first run, including encrypted
-passwords and the `proxyuser@proxyhost:port#user` jump syntax. The original file
-is left untouched.
+Use **Import from AutoPuTTY** in the settings menu and point it at an existing
+`autoputty.xml`. The original file is left untouched.
+
+Passwords and comments come across, and two AutoPuTTY conventions become real
+structure: a name like `Customer: server` turns into a folder plus a name, and
+the `proxyuser@proxyhost:port#user` jump syntax becomes a jump host with its own
+fields. Tool paths and options can be imported too, if you want them.
+
+If the list was protected by an AutoPuTTY master password, Hostpad asks for it.
+Otherwise it opens the file with AutoPuTTY's built-in key.
+
+> Note that an `autoputty.xml` without a master password is encrypted with a key
+> published in AutoPuTTY's own source, so anyone can read it. Treat such files as
+> plaintext: they hold hostnames, usernames and passwords.
 
 ## About this project
 
