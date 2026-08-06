@@ -9,7 +9,8 @@
                  WindowBackdropType="Mica"
                  ExtendsContentIntoTitleBar="True"
                  WindowCornerPreference="Round"
-                 WindowStartupLocation="CenterOwner">
+                 WindowStartupLocation="CenterOwner"
+                 Icon="Assets/hostpad.ico">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -21,7 +22,7 @@
 
         <StackPanel Grid.Row="1" Margin="20,8,20,20">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                <ui:SymbolIcon Symbol="BookContacts24" FontSize="26" Margin="0,0,10,0" />
+                <Image Source="Assets/hostpad.png" Width="34" Height="34" Margin="0,0,12,0" />
                 <TextBlock Text="Hostpad" FontSize="20" VerticalAlignment="Center" />
             </StackPanel>
 

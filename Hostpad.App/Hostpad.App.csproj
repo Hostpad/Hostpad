@@ -7,6 +7,7 @@
     <RootNamespace>Hostpad.App</RootNamespace>
     <AssemblyName>Hostpad</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\hostpad.ico</ApplicationIcon>
     <!-- Framework-dependent: users install the .NET runtime once, downloads stay small. -->
     <SelfContained>false</SelfContained>
   </PropertyGroup>
@@ -18,6 +19,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hostpad.Core\Hostpad.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\hostpad.png" />
+    <Resource Include="Assets\hostpad.ico" />
   </ItemGroup>
 
 </Project>

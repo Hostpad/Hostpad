@@ -33,6 +33,7 @@ public partial class MainWindow : FluentWindow
         DataContext = viewModel;
 
         viewModel.AskSaveChanges = AskSaveChanges;
+        viewModel.ConfirmDelete = ConfirmDelete;
 
         InitializeComponent();
         RestoreWindowState();
@@ -129,6 +130,19 @@ public partial class MainWindow : FluentWindow
     /// is no cancel: whatever the user does next still happens, they only choose
     /// whether the edits survive it.
     /// </summary>
+    /// <summary>
+    /// Asked before a delete. No is the default button: the dangerous answer
+    /// should not be the one a stray Enter picks.
+    /// </summary>
+    private bool ConfirmDelete(string question) =>
+        MessageBox.Show(
+            this,
+            $"{question}\n\nThis cannot be undone.",
+            "Delete",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning,
+            MessageBoxResult.No) == MessageBoxResult.Yes;
+
     private bool AskSaveChanges(string connectionName) =>
         MessageBox.Show(
             this,

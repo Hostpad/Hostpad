@@ -10,7 +10,8 @@
                  WindowBackdropType="Mica"
                  ExtendsContentIntoTitleBar="True"
                  WindowCornerPreference="Round"
-                 WindowStartupLocation="CenterOwner">
+                 WindowStartupLocation="CenterOwner"
+                 Icon="Assets/hostpad.ico">
 
     <ui:FluentWindow.Resources>
         <local:ThemeNameConverter x:Key="ThemeName" />

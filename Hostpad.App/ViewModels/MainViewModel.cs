@@ -60,6 +60,9 @@ public sealed partial class MainViewModel : ObservableObject
     /// </summary>
     public Func<string, bool>? AskSaveChanges { get; set; }
 
+    /// <summary>Asked before anything is deleted. True goes ahead.</summary>
+    public Func<string, bool>? ConfirmDelete { get; set; }
+
     partial void OnSelectedNodeChanging(TreeNode? value) => FlushPendingEdits();
 
     partial void OnSearchTextChanging(string value) => FlushPendingEdits();
@@ -208,32 +211,78 @@ public sealed partial class MainViewModel : ObservableObject
         switch (SelectedNode)
         {
             case ConnectionNode node when Document.FindConnection(node.Id) is { } connection:
+                if (ConfirmDelete?.Invoke($"Delete {connection.Name}?") != true)
+                {
+                    return;
+                }
+
                 Document.Connections.Remove(connection);
                 StatusText = $"Deleted {connection.Name}.";
                 break;
 
-            // Deleting a folder must not destroy what is inside it: the contents
-            // move up to the root, where they stay visible and recoverable.
             case GroupNode node when Document.FindGroup(node.Id) is { } group:
-                foreach (var child in Document.Connections.Where(c => c.GroupId == group.Id))
-                {
-                    child.GroupId = group.ParentId;
-                }
-
-                foreach (var child in Document.Groups.Where(g => g.ParentId == group.Id))
-                {
-                    child.ParentId = group.ParentId;
-                }
-
-                Document.Groups.Remove(group);
-                StatusText = $"Deleted group {group.Name}. Its contents moved up one level.";
+                DeleteGroup(group);
                 break;
 
             default:
                 return;
         }
 
+        Editor.MarkClean();
         SaveAndRebuild(selectId: null);
+    }
+
+    /// <summary>
+    /// Deletes a folder with everything inside it, subfolders included. The
+    /// confirmation names the numbers, because the damage is proportional to
+    /// what the folder holds and the tree may be collapsed at the time.
+    /// </summary>
+    private void DeleteGroup(ConnectionGroup group)
+    {
+        var groups = DescendantGroups(group.Id).Append(group).ToList();
+        var groupIds = groups.Select(g => g.Id).ToHashSet();
+        var connections = Document.Connections.Where(c => c.GroupId is { } id && groupIds.Contains(id)).ToList();
+
+        var question = (connections.Count, groups.Count - 1) switch
+        {
+            (0, 0) => $"Delete the empty group {group.Name}?",
+            (var c, 0) => $"Delete {group.Name} and the {c} connection{(c == 1 ? string.Empty : "s")} in it?",
+            (var c, var g) =>
+                $"Delete {group.Name}, its {g} subgroup{(g == 1 ? string.Empty : "s")} " +
+                $"and the {c} connection{(c == 1 ? string.Empty : "s")} inside?",
+        };
+
+        if (ConfirmDelete?.Invoke(question) != true)
+        {
+            return;
+        }
+
+        foreach (var connection in connections)
+        {
+            Document.Connections.Remove(connection);
+        }
+
+        foreach (var doomed in groups)
+        {
+            Document.Groups.Remove(doomed);
+        }
+
+        StatusText = connections.Count == 0
+            ? $"Deleted group {group.Name}."
+            : $"Deleted group {group.Name} and {connections.Count} connections.";
+    }
+
+    private IEnumerable<ConnectionGroup> DescendantGroups(Guid parentId)
+    {
+        foreach (var child in Document.Groups.Where(g => g.ParentId == parentId).ToList())
+        {
+            yield return child;
+
+            foreach (var grandchild in DescendantGroups(child.Id))
+            {
+                yield return grandchild;
+            }
+        }
     }
 
     [RelayCommand(CanExecute = nameof(HasConnectionSelected))]
@@ -459,6 +508,16 @@ public sealed partial class MainViewModel : ObservableObject
             Id = group.Id,
             Name = group.Name,
             IsExpanded = group.IsExpanded,
+        };
+
+        // Set after construction so populating the tree does not look like the
+        // user opening and closing every folder.
+        node.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(GroupNode.IsExpanded))
+            {
+                PersistExpansion(node.Id, node.IsExpanded);
+            }
         };
 
         foreach (var child in Document.ChildGroups(group.Id))

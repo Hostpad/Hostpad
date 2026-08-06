@@ -28,6 +28,12 @@ public partial class App : Application
 
         base.OnStartup(e);
 
+        if (e.Args.Contains("--render-icon"))
+        {
+            RenderIcon();
+            return;
+        }
+
         if (e.Args.Contains("--demo"))
         {
             RunDemo();
@@ -99,6 +105,72 @@ public partial class App : Application
             "Hostpad",
             MessageBoxButton.OK,
             MessageBoxImage.Warning);
+
+    /// <summary>
+    /// Draws the application icon at every size Windows asks for. The shapes
+    /// mirror docs/icon.svg, which is the source of the design; this exists
+    /// because nothing in WPF can rasterise an SVG.
+    /// </summary>
+    private static void RenderIcon()
+    {
+        foreach (var size in new[] { 16, 24, 32, 48, 64, 128, 256 })
+        {
+            var visual = new System.Windows.Media.DrawingVisual();
+
+            using (var context = visual.RenderOpen())
+            {
+                var scale = size / 256.0;
+                context.PushTransform(new System.Windows.Media.ScaleTransform(scale, scale));
+
+                context.DrawRoundedRectangle(
+                    new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0x1E, 0x62, 0xD0)),
+                    null,
+                    new Rect(0, 0, 256, 256),
+                    56,
+                    56);
+
+                var chevron = new System.Windows.Media.PathGeometry();
+                var figure = new System.Windows.Media.PathFigure { StartPoint = new Point(84, 88) };
+                figure.Segments.Add(new System.Windows.Media.LineSegment(new Point(128, 128), true));
+                figure.Segments.Add(new System.Windows.Media.LineSegment(new Point(84, 168), true));
+                chevron.Figures.Add(figure);
+
+                context.DrawGeometry(
+                    null,
+                    new System.Windows.Media.Pen(System.Windows.Media.Brushes.White, 24)
+                    {
+                        StartLineCap = System.Windows.Media.PenLineCap.Round,
+                        EndLineCap = System.Windows.Media.PenLineCap.Round,
+                        LineJoin = System.Windows.Media.PenLineJoin.Round,
+                    },
+                    chevron);
+
+                context.DrawRoundedRectangle(
+                    new System.Windows.Media.SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(0xFF, 0xC5, 0x3D)),
+                    null,
+                    new Rect(140, 152, 52, 18),
+                    9,
+                    9);
+
+                context.Pop();
+            }
+
+            var bitmap = new System.Windows.Media.Imaging.RenderTargetBitmap(
+                size, size, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+            bitmap.Render(visual);
+
+            var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+            encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bitmap));
+
+            using var stream = System.IO.File.Create(
+                System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"hostpad-icon-{size}.png"));
+            encoder.Save(stream);
+        }
+
+        Environment.Exit(0);
+    }
 
     /// <summary>
     /// Fills a throwaway vault with invented servers and captures the window,

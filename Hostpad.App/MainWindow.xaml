@@ -13,7 +13,8 @@
                  WindowBackdropType="Mica"
                  ExtendsContentIntoTitleBar="True"
                  WindowCornerPreference="Round"
-                 WindowStartupLocation="CenterScreen">
+                 WindowStartupLocation="CenterScreen"
+                 Icon="Assets/hostpad.ico">
 
     <ui:FluentWindow.Resources>
         <local:ProtocolNameConverter x:Key="ProtocolName" />
@@ -49,7 +50,7 @@
 
         <ui:TitleBar Grid.Row="0" Title="Hostpad">
             <ui:TitleBar.Icon>
-                <ui:SymbolIcon Symbol="BookContacts24" />
+                <ui:ImageIcon Source="Assets/hostpad.png" Width="16" Height="16" />
             </ui:TitleBar.Icon>
             <ui:TitleBar.TrailingContent>
                 <ui:Button Appearance="Transparent"
