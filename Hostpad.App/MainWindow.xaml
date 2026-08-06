@@ -19,14 +19,14 @@
         <local:ProtocolNameConverter x:Key="ProtocolName" />
         <local:BoolToVisibilityConverter x:Key="BoolToVisibility" />
 
+        <!-- One height for every control in the list toolbar, so they line up. -->
+        <sys:Double x:Key="ToolBarHeight">34</sys:Double>
+
         <!--
           BasedOn is load-bearing: without it this replaces WPF-UI's default
           style outright, taking the control template with it, and the icon
           renders as an empty box.
         -->
-        <!-- One height for every control in the list toolbar, so they line up. -->
-        <sys:Double x:Key="ToolBarHeight">34</sys:Double>
-
         <Style x:Key="ToolButton" TargetType="ui:Button" BasedOn="{StaticResource {x:Type ui:Button}}">
             <Setter Property="Padding" Value="7,4" />
             <Setter Property="MinWidth" Value="0" />
@@ -146,7 +146,10 @@
                             <HierarchicalDataTemplate DataType="{x:Type vm:GroupNode}"
                                                       ItemsSource="{Binding Children}">
                                 <StackPanel Orientation="Horizontal" Margin="0,2">
-                                    <ui:SymbolIcon Symbol="{Binding Icon}" FontSize="15" Margin="0,0,6,0" />
+                                    <ui:FontIcon Glyph="{Binding Icon}"
+                                                 FontFamily="{StaticResource FluentIconFont}"
+                                                 FontSize="15"
+                                                 Margin="0,0,6,0" />
                                     <TextBlock Text="{Binding Name}"
                                                VerticalAlignment="Center"
                                                Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibility}, ConverterParameter=invert}" />
@@ -167,10 +170,14 @@
 
                             <DataTemplate DataType="{x:Type vm:ConnectionNode}">
                                 <StackPanel Orientation="Horizontal" Margin="0,2">
-                                    <ui:SymbolIcon Symbol="{Binding Icon}" FontSize="15" Margin="0,0,6,0" />
+                                    <ui:FontIcon Glyph="{Binding Icon}"
+                                                 FontFamily="{StaticResource FluentIconFont}"
+                                                 FontSize="15"
+                                                 Margin="0,0,6,0" />
                                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
-                                    <ui:SymbolIcon Symbol="ArrowRouting24"
-                                                   FontSize="13"
+                                    <ui:FontIcon Glyph="{Binding JumpIcon}"
+                                                 FontFamily="{StaticResource FluentIconFont}"
+                                                 FontSize="13"
                                                    Margin="6,0,0,0"
                                                    ToolTip="Reached through a jump host"
                                                    Visibility="{Binding HasJumpHost, Converter={StaticResource BoolToVisibility}}" />
