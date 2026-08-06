@@ -19,7 +19,7 @@
               template without the trigger that starts it. Everything else here
               matches the original.
             -->
-            <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource {x:Type ContextMenu}}">
+            <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource UiContextMenu}">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ContextMenu}">
