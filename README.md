@@ -1,32 +1,96 @@
 # Hostpad
 
-A connection manager for Windows. Keep your servers in one list and launch SSH,
-SFTP, FTP, RDP or VNC sessions with a double click.
+A connection manager for Windows. Keep every remote machine in one place and
+open it with a double click — SSH, SFTP, SCP, FTP, Remote Desktop or VNC,
+through the client tools you already use.
 
-> **Status:** early development. Not yet usable.
+![Hostpad](docs/screenshot.png)
 
-## What it does
+> **Status:** early development. Usable, but not yet released.
 
-- One address book for every remote machine, organised in folders and tags
-- Launches your existing tools — PuTTY, WinSCP, Remote Desktop, a VNC viewer
-- Reusable profiles, so "PuTTY with this key and this post-login command" is
-  configured once instead of per server
-- SSH jump hosts as real fields, not encoded inside the username
-- Connect to several machines at once
-- Credentials encrypted at rest, optionally behind a master password
-- Windows 11 look with light and dark themes
+## Why
+
+A good connection manager is an address book, not another terminal. Hostpad
+keeps the list, the credentials and the notes; PuTTY, WinSCP, mstsc and your VNC
+viewer keep doing what they are good at.
+
+The idea comes from [AutoPuTTY](https://github.com/r4dius/AutoPuTTY), a tool
+that did this job well for many years. Hostpad is freely inspired by it — no
+fork, no shared code, written from scratch — and brings the idea up to date:
+folders, real encryption, a Windows 11 interface, and the fields that used to be
+encoded inside other fields turned into fields of their own.
+
+## Features
+
+**Organise**
+
+- Folders with nesting, plus connections that belong to no folder at all
+- Drag and drop to move connections between folders and to reorganise folders
+- Rename in place with F2
+- Search across name, hostname, username and notes, which flattens the tree
+  while you are hunting
+- Switch between the folder tree and one flat list
+- A notes field per connection, for the things you always forget
+
+**Connect**
+
+- Six connection types: PuTTY, Remote Desktop, VNC, and WinSCP in its SFTP, SCP
+  and FTP modes
+- Double click connects with the type you chose; the right-click menu opens the
+  same host with any of the others
+- SSH jump hosts as real fields, tunnelled through plink, instead of a proxy
+  string smuggled into the username
+- Private key authentication, post-login commands and X11 forwarding for PuTTY
+- Screen size, mounted drives, multiple monitors and admin sessions for Remote
+  Desktop
+- Full screen and view-only for VNC, passive mode for FTP
+
+**Protect**
+
+- The connection list is encrypted with AES-256-GCM, always
+- Without a master password the vault is tied to your Windows account through
+  DPAPI: no prompt, and useless to anyone who copies the file
+- With a master password it also opens on another computer, which is what makes
+  a backup worth having. Asking for it at startup is a separate choice, so you
+  can have portability without the interruption
+- Passwords are derived with PBKDF2-HMAC-SHA256, and the iteration count lives
+  in the file so it can be raised later without breaking existing vaults
+- Changing the master password rewraps a key rather than re-encrypting
+  everything, so it is instant at any size
+
+**Move data in and out**
+
+- Import from AutoPuTTY, including passwords, notes, folders recovered from name
+  prefixes, jump hosts, and optionally the tool paths
+- Export a password-protected copy to share, with a choice of whether to include
+  the saved credentials — sharing a server list rarely means handing over the
+  root passwords
+- Import merges rather than replaces, and asks what to do about names that
+  already exist
+
+**Everyday details**
+
+- Follows the Windows light and dark theme, with Mica and rounded corners
+- Offers to save when unsaved edits are about to be lost, including on close
+- Remembers window position, size and pane widths, and refuses to restore onto a
+  monitor that is no longer there
+- Saves atomically, keeping a backup, so a crash mid-save cannot truncate your
+  connection list
+- Single instance, so a second launch does not open a second window
 
 ## Requirements
 
 - Windows 10 or 11
 - [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)
-- The client tools you intend to use (PuTTY, WinSCP, a VNC viewer). Remote
-  Desktop ships with Windows.
+- The client tools you intend to use: PuTTY, WinSCP, a VNC viewer. Remote Desktop
+  ships with Windows
+
+Your data lives in `%USERPROFILE%\.hostpad`.
 
 ## Building
 
 Building needs the .NET 10 **SDK**, which is a different package from the
-runtime listed above. Install it with winget:
+runtime above. Install it with winget:
 
 ```bash
 winget install Microsoft.DotNet.SDK.10
@@ -76,22 +140,33 @@ fields. Tool paths and options can be imported too, if you want them.
 If the list was protected by an AutoPuTTY master password, Hostpad asks for it.
 Otherwise it opens the file with AutoPuTTY's built-in key.
 
-> Note that an `autoputty.xml` without a master password is encrypted with a key
-> published in AutoPuTTY's own source, so anyone can read it. Treat such files as
+> An `autoputty.xml` without a master password is encrypted with a key published
+> in AutoPuTTY's own source, so anyone can read it. Treat such files as
 > plaintext: they hold hostnames, usernames and passwords.
+
+## How it is built
+
+Two projects. `Hostpad.Core` holds the model, storage, cryptography and the
+command building for each tool, with no user interface and no Windows-only API
+outside the one class that talks to DPAPI. `Hostpad.App` is WPF with
+[WPF-UI](https://github.com/lepoco/wpfui).
+
+The launchers produce a command and hand it back rather than starting a process
+themselves, which is what lets the argument building be tested without spawning
+anything.
 
 ## About this project
 
-Hostpad began as a fork of [AutoPuTTY](https://github.com/r4dius/AutoPuTTY) by
-r4dius, but shares no code with it: the application was rewritten from scratch
-in .NET 10 and WPF. Thanks to r4dius for the original idea and for a tool that
-did the job for many years.
+Hostpad is freely inspired by [AutoPuTTY](https://github.com/r4dius/AutoPuTTY)
+by r4dius. It is not a fork and shares no code with it: the application was
+written from scratch on .NET 10 and WPF. Thanks to r4dius for the original idea
+and for a tool that did the job for many years.
 
 ## Name and official builds
 
 The source is free software under the GPL — fork it, modify it, redistribute it.
-The **name "Hostpad" is not covered by that licence**: please rename your fork
-so users can tell the projects apart.
+The **name "Hostpad" is not covered by that licence**: please rename your fork so
+users can tell the projects apart.
 
 The only official releases are published at
 <https://github.com/goodmagma/Hostpad>. Copies distributed elsewhere, in
