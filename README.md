@@ -137,6 +137,10 @@ Visual Studio 2022 17.14 or later opens `Hostpad.sln` directly. Set
 Warnings are errors in this repository, so a build that prints nothing is a
 build that passed.
 
+Bug reports, ideas and patches are welcome:
+[CONTRIBUTING.md](CONTRIBUTING.md) covers how the code is arranged, what the
+tests expect and how a change gets in.
+
 ## Migrating from AutoPuTTY
 
 Use **Import from AutoPuTTY** in the settings menu and point it at an existing
