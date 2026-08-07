@@ -1,0 +1,50 @@
+name: Feature request
+description: Suggest something Hostpad should do
+labels: [enhancement]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hostpad is small on purpose: an address book for remote machines that
+        hands the work to PuTTY, WinSCP, mstsc and your VNC viewer. Three things
+        are settled and unlikely to change, so it is worth knowing them before
+        writing a long proposal:
+
+        - connecting is always delegated to an external tool, never implemented
+          inside Hostpad
+        - credentials never leave the encrypted vault
+        - it stays one window, with no background service
+
+        Everything else is open.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What were you trying to do
+      description: |
+        Describe the problem before the solution — what you were doing and where
+        Hostpad got in the way. That leaves room for a design that fits the rest
+        of the application.
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How do you handle it today
+      description: Another tool, a manual step, or simply not doing it.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you have in mind
+      description: Optional. A rough idea is fine; so is leaving this empty.
+
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues.
+          required: true

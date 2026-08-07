@@ -1,0 +1,16 @@
+# Blank issues stay off so that reports arrive with a version and a
+# reproduction, which is what makes them answerable.
+blank_issues_enabled: false
+
+contact_links:
+  - name: Security problem
+    url: https://github.com/goodmagma/Hostpad/security/advisories/new
+    about: Anything touching the vault, the encryption or the master password. Private, not a public issue.
+
+  - name: Importing from AutoPuTTY
+    url: https://github.com/goodmagma/Hostpad#migrating-from-autoputty
+    about: How the import works and what it carries across.
+
+  - name: Contributing
+    url: https://github.com/goodmagma/Hostpad/blob/develop/CONTRIBUTING.md
+    about: How the code is arranged, what the tests expect and how a change gets in.

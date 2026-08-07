@@ -1,0 +1,86 @@
+name: Bug report
+description: Something in Hostpad behaves wrongly
+labels: [bug]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please do not put real hostnames, usernames or
+        passwords anywhere below — invent replacements. The bug almost never
+        depends on the actual values.
+
+        Anything touching the vault, the encryption or the master password is a
+        security matter and does not belong in a public issue. Use
+        [private reporting](https://github.com/goodmagma/Hostpad/security/advisories/new)
+        instead.
+
+  - type: input
+    id: version
+    attributes:
+      label: Hostpad version
+      description: The version shown in the settings menu under About.
+      placeholder: 1.0.2
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Settings → System → About, the "OS build" line.
+      placeholder: Windows 11 Pro 26200
+    validations:
+      required: true
+
+  - type: dropdown
+    id: download
+    attributes:
+      label: Which download
+      options:
+        - Hostpad-x.y.z-win-x64.exe (nothing to install)
+        - Hostpad.exe (needs the .NET runtime)
+        - Hostpad-x.y.z-win-x64.zip
+        - Built from source
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, and what Hostpad did instead of what you expected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered, starting from a freshly opened Hostpad.
+      placeholder: |
+        1. Open Hostpad
+        2. Right-click a connection in a folder
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: errors
+    attributes:
+      label: Error text
+      description: |
+        If Hostpad showed an error dialog, quote it exactly. If it closed on its
+        own, look in Event Viewer under Windows Logs → Application for a .NET
+        Runtime entry and paste the stack trace.
+      render: text
+
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Before submitting
+      options:
+        - label: This report contains no real hostnames, usernames or passwords.
+          required: true
+        - label: I searched the existing issues.
+          required: true
