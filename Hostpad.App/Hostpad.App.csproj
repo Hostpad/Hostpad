@@ -26,4 +26,13 @@
     <Resource Include="Assets\hostpad.ico" />
   </ItemGroup>
 
+  <!--
+    Embedded rather than copied next to the executable: the single-file
+    downloads are one file with nothing beside them, and the MIT licences of
+    the bundled libraries want their notices to travel with the software.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\THIRD-PARTY-NOTICES.md" LogicalName="THIRD-PARTY-NOTICES.md" />
+  </ItemGroup>
+
 </Project>

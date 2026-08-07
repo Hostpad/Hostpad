@@ -163,6 +163,24 @@ The launchers produce a command and hand it back rather than starting a process
 themselves, which is what lets the argument building be tested without spawning
 anything.
 
+## Built with
+
+Hostpad stands on a short list of other people's work:
+
+- [WPF-UI](https://github.com/lepoco/wpfui) by Leszek Pomianowski and
+  contributors — the Windows 11 look, MIT
+- [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet) — the MVVM
+  source generators, MIT
+- [.NET](https://github.com/dotnet/runtime) — the runtime, WPF and the DPAPI
+  wrapper the vault is built on, MIT
+
+Development also leans on [xUnit](https://github.com/xunit/xunit) for the test
+suite, which is not part of anything shipped.
+
+Full copyright notices are in
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), which is also included in
+every download.
+
 ## About this project
 
 Hostpad is freely inspired by [AutoPuTTY](https://github.com/r4dius/AutoPuTTY)
@@ -183,3 +201,7 @@ particular paid ones, are not from us.
 ## Licence
 
 GNU General Public License v3.0 or later — see [LICENSE](LICENSE).
+
+The bundled libraries keep their own licences, all MIT and all compatible with
+the GPL; their notices are in
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

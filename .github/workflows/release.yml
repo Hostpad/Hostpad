@@ -51,10 +51,13 @@ jobs:
             --output publish/Hostpad `
             -p:Version=${{ steps.version.outputs.version }}
 
-      - name: Add the licence and readme
+      # The MIT licences of the bundled libraries ask for their notices to
+      # travel with the software, so the notices ship inside the archive.
+      - name: Add the licence, notices and readme
         shell: pwsh
         run: |
           Copy-Item LICENSE publish/Hostpad/
+          Copy-Item THIRD-PARTY-NOTICES.md publish/Hostpad/
           Copy-Item README.md publish/Hostpad/
 
       - name: Package

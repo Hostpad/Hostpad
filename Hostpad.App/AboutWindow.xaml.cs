@@ -31,5 +31,40 @@ public partial class AboutWindow : FluentWindow
         return plus > 0 ? informational[..plus] : informational;
     }
 
+    /// <summary>
+    /// Opens the licence notices of the bundled libraries. They are embedded in
+    /// the assembly rather than shipped beside it, because two of the three
+    /// downloads are a single file with nothing next to them. Written out as
+    /// .txt so every machine has something that opens it.
+    /// </summary>
+    private void OnShowNotices(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            using var resource = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream("THIRD-PARTY-NOTICES.md")
+                ?? throw new InvalidOperationException("They are missing from this build.");
+
+            var path = System.IO.Path.Combine(
+                System.IO.Path.GetTempPath(), "Hostpad-third-party-notices.txt");
+
+            using (var file = System.IO.File.Create(path))
+            {
+                resource.CopyTo(file);
+            }
+
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show(
+                $"Hostpad could not open the third-party notices.\n\n{ex.Message}",
+                "Hostpad",
+                System.Windows.MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+    }
+
     private void OnClose(object sender, RoutedEventArgs e) => Close();
 }

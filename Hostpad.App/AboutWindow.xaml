@@ -49,6 +49,11 @@
                                 Padding="0,4"
                                 HorizontalAlignment="Left" />
 
+            <ui:HyperlinkButton Content="Third-party notices"
+                                Padding="0,4"
+                                HorizontalAlignment="Left"
+                                Click="OnShowNotices" />
+
             <ui:Button Content="Close"
                        Appearance="Primary"
                        HorizontalAlignment="Right"
