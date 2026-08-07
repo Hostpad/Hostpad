@@ -165,7 +165,19 @@ jobs:
           # since --notes-file would otherwise replace the whole body.
           $body = gh release view '${{ inputs.tag }}' --json body --jq .body
           $generated = ''
-          $marker = $body.IndexOf("## What's Changed")
+          $marker = -1
+
+          # gh writes "## What's Changed" only when pull requests were merged in
+          # the range. Commits pushed straight to the branch leave nothing but
+          # the Full Changelog line, so both openings count; keep from whichever
+          # comes first.
+          foreach ($needle in "## What's Changed", "**Full Changelog**") {
+            $at = $body.IndexOf($needle)
+
+            if ($at -ge 0 -and ($marker -lt 0 -or $at -lt $marker)) {
+              $marker = $at
+            }
+          }
 
           if ($marker -ge 0) {
             $generated = "`n`n" + $body.Substring($marker)

@@ -89,7 +89,9 @@ encoded inside other fields turned into fields of their own.
 ## Requirements
 
 - Windows 10 or 11
-- [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0),
+  unless you take `Hostpad-<version>-win-x64.exe`, which carries the runtime
+  inside it and needs nothing installed
 - The client tools you intend to use: PuTTY, WinSCP, a VNC viewer. Remote Desktop
   ships with Windows
 
