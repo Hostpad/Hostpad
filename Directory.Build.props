@@ -18,7 +18,7 @@
     <Company>goodmagma</Company>
     <Authors>Denis Torresan</Authors>
     <Copyright>Copyright (C) 2026 Denis Torresan</Copyright>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionPrefix>1.0.2</VersionPrefix>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/goodmagma/Hostpad</RepositoryUrl>
   </PropertyGroup>
