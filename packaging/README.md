@@ -1,35 +1,23 @@
 # Packaging
 
-Manifests that let package managers install Hostpad. They are kept in this
-repository so that a release and the description of that release move together;
-publishing them is a separate, manual step described below.
+How package managers install Hostpad. Each pins a version and the SHA-256 of the
+file it installs, so a manifest can only be written after the release it
+describes: the hash does not exist until the workflow has built the file.
 
-Both manifests package `Hostpad-<version>-win-x64.exe`, the self-contained
-build. It is much the largest download, and it is still the right one here: a
-package manager that installed the framework-dependent build would leave people
-with an application that refuses to start until they find the .NET runtime
-themselves.
+Both package `Hostpad-<version>-win-x64.exe`, the self-contained build. It is
+much the largest download, and it is still the right one here: a package manager
+that installed the framework-dependent build would leave people with an
+application that refuses to start until they find the .NET runtime themselves.
 
-Neither package needs to preserve anything on upgrade. Hostpad keeps its vault
-and settings in `%USERPROFILE%\.hostpad`, outside whatever directory the package
+Neither needs to preserve anything on upgrade. Hostpad keeps its vault and
+settings in `%USERPROFILE%\.hostpad`, outside whatever directory the package
 manager owns.
 
 ## Scoop
 
-`scoop/hostpad.json`. Scoop installs from a *bucket*, which is a Git repository
-of manifests, so the file has to be reachable from one of those.
-
-The quickest route, needing no new repository, is a direct install from a raw
-URL:
-
-```bash
-scoop install https://raw.githubusercontent.com/goodmagma/Hostpad/master/packaging/scoop/hostpad.json
-```
-
-That works, but it does not put Hostpad in anyone's search results, and Scoop
-will not update it. For that, create a repository named `scoop-bucket` under the
-same account, copy this file into its `bucket/` directory, and the install
-becomes:
+The manifest does **not** live here. It is in
+[goodmagma/scoop-bucket](https://github.com/goodmagma/scoop-bucket), because
+Scoop installs from a *bucket*, which is a Git repository of manifests.
 
 ```bash
 scoop bucket add goodmagma https://github.com/goodmagma/scoop-bucket
@@ -39,10 +27,14 @@ scoop bucket add goodmagma https://github.com/goodmagma/scoop-bucket
 scoop install goodmagma/hostpad
 ```
 
-The manifest already carries `checkver` and `autoupdate`, so a bucket repository
-with the standard `excavator` action will follow new GitHub releases on its own:
-it reads the latest tag, rewrites `version` and the URL, downloads the file and
-computes the new hash. No manual edit per release.
+There was a copy in this directory. It is gone on purpose: the bucket runs the
+`excavator` action, which reads the manifest's `checkver` block, notices a new
+release, downloads the file, computes the hash and commits it. A second copy
+here would not receive any of that, and would quietly serve an old version to
+anyone who found it.
+
+So a release needs nothing done for Scoop. Within a day the bucket has followed
+it.
 
 ## winget
 
@@ -76,7 +68,12 @@ wingetcreate update goodmagma.Hostpad --version 1.0.4 --urls https://github.com/
 
 ## Updating for a new release
 
-The hashes here are the SHA-256 of the published assets, and the release notes
-print the same values — the workflow computes them from the files it just built.
-Take them from the release page rather than recomputing by hand, and the two
-places cannot disagree.
+Scoop looks after itself. winget does not, so after a release the manifests here
+describe the previous one until someone bumps them: rename the directory, change
+`PackageVersion` in all three files, and update the URL, the hash and
+`ReleaseDate` in the installer manifest.
+
+Take the hash from the release notes rather than recomputing it. The workflow
+computes it from the file it just built, which is the only reason it is worth
+anything — a hash produced afterwards from the same download proves nothing
+except that the download did not change while you were looking at it.

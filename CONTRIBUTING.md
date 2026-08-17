@@ -174,14 +174,18 @@ dotnet run --project Hostpad.App -- --demo
 
 ## Packaging
 
-`packaging/` holds the Scoop and winget manifests, each pinned to a version and
-to the SHA-256 of the file it installs. They are not updated by the release
-workflow, so after a release they describe the previous one until someone bumps
-them; `packaging/README.md` says how, and how each one gets published.
+`packaging/` holds the winget manifests, pinned to a version and to the SHA-256
+of the file they install. The release workflow does not touch them, so after a
+release they describe the previous one until someone bumps them;
+`packaging/README.md` says how, and how they get published.
 
-Take the hashes from the release notes rather than recomputing them. The
-workflow computes them from the files it just built, which is the whole reason
-they are worth anything.
+The Scoop manifest is not here. It lives in
+[goodmagma/scoop-bucket](https://github.com/goodmagma/scoop-bucket), where an
+action follows new releases and commits the new hash on its own.
+
+Take hashes from the release notes rather than recomputing them. The workflow
+computes them from the files it just built, which is the whole reason they are
+worth anything.
 
 ## Licence
 

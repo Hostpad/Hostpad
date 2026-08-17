@@ -10,6 +10,13 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+### Added
+
+- Hostpad can be installed with Scoop, from the `goodmagma` bucket. Scoop checks
+  the download against the hash the release workflow published, which is the
+  verification an unsigned build otherwise asks you to do by hand, and
+  `scoop update` follows new releases.
+
 ## [1.0.3] - 2026-08-17
 
 ### Added

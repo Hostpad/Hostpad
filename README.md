@@ -125,12 +125,19 @@ If the hash matches the one on the
 is the one the workflow built. If it does not, do not run it, wherever you got
 it from.
 
-Scoop can do this for you, since the manifest carries the expected hash and
-refuses a file that does not match:
+[Scoop](https://scoop.sh) does this for you: the manifest carries the expected
+hash and Scoop refuses a file that does not match.
 
 ```bash
-scoop install https://raw.githubusercontent.com/goodmagma/Hostpad/master/packaging/scoop/hostpad.json
+scoop bucket add goodmagma https://github.com/goodmagma/scoop-bucket
 ```
+
+```bash
+scoop install goodmagma/hostpad
+```
+
+`scoop update hostpad` then follows new releases, checking each download the
+same way.
 
 ## Building
 
