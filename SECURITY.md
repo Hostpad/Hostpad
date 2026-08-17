@@ -40,7 +40,13 @@ old ones.
 These are known, documented and not treated as vulnerabilities:
 
 - **SmartScreen warnings.** The builds are not code-signed. The warning is
-  expected; verify the download against the release page instead.
+  expected. What stands in for a signature is provenance you can check: every
+  release is built by the workflow in this repository from the tagged commit,
+  and that workflow prints the SHA-256 of each file it built into the release
+  notes. Compare it with `Get-FileHash <file> -Algorithm SHA256`, as
+  [the readme](README.md#verifying-your-download) describes. A file whose hash
+  does *not* match the release page did not come from here, and that is worth
+  reporting.
 - **An `autoputty.xml` without a master password.** AutoPuTTY encrypts those
   with a key published in its own source, so anyone can read them. Hostpad can
   therefore read them too. This is a property of the file you are importing, not

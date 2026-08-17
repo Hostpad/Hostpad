@@ -97,6 +97,39 @@ encoded inside other fields turned into fields of their own.
 
 Your data lives in `%USERPROFILE%\.hostpad`.
 
+## Verifying your download
+
+Hostpad is not code-signed, so Windows SmartScreen will warn the first time you
+run it: *Windows protected your PC*. Choose **More info → Run anyway**. A
+certificate that removes the warning costs money the project does not have, and
+the free programme for open source asks for a level of public visibility Hostpad
+has not reached yet.
+
+What you get instead of a signature is a hash, and a build you can trace. Every
+release is produced by
+[the release workflow](.github/workflows/release.yml) on GitHub's runners,
+starting from the tagged commit; no file on a release page is uploaded from a
+developer machine. That workflow computes the SHA-256 of each file it built and
+writes it into the release notes.
+
+So compare what you downloaded against what the workflow published:
+
+```bash
+Get-FileHash .\Hostpad-1.0.2-win-x64.exe -Algorithm SHA256
+```
+
+If the hash matches the one on the
+[release page](https://github.com/goodmagma/Hostpad/releases/latest), the file
+is the one the workflow built. If it does not, do not run it, wherever you got
+it from.
+
+Scoop can do this for you, since the manifest carries the expected hash and
+refuses a file that does not match:
+
+```bash
+scoop install https://raw.githubusercontent.com/goodmagma/Hostpad/master/packaging/scoop/hostpad.json
+```
+
 ## Building
 
 Building needs the .NET 10 **SDK**, which is a different package from the

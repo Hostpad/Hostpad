@@ -120,6 +120,21 @@ jobs:
       - name: Compose the release notes
         shell: pwsh
         run: |
+          # The builds carry no code signature, so a published hash is the only
+          # thing a downloader can check them against. It is worth something
+          # only because it is computed here, by the workflow that produced the
+          # files, and not by hand afterwards.
+          $rows = foreach ($file in
+            '${{ steps.standalone.outputs.name }}',
+            '${{ steps.singlefile.outputs.name }}',
+            '${{ steps.package.outputs.name }}') {
+
+            $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            "| ``$file`` | ``$hash`` |"
+          }
+
+          $checksums = $rows -join "`n"
+
           @"
           ### Download
 
@@ -131,7 +146,20 @@ jobs:
 
           Your connections are stored in ``%USERPROFILE%\.hostpad``.
 
-          Windows SmartScreen may warn on first run: the build is not code-signed. Choose **More info → Run anyway**.
+          ### Verifying your download
+
+          These files are not code-signed, so Windows SmartScreen will warn the
+          first time you run one. Choose **More info → Run anyway**.
+
+          Instead of a signature there is a hash. Run
+          ``Get-FileHash .\<file> -Algorithm SHA256`` in PowerShell and compare:
+
+          | File | SHA-256 |
+          | --- | --- |
+          $checksums
+
+          Every release is built by [this workflow](https://github.com/goodmagma/Hostpad/blob/master/.github/workflows/release.yml)
+          from the tagged commit. No file here is uploaded from a developer machine.
           "@ | Out-File notes.md -Encoding utf8
 
       - name: Publish the release
