@@ -41,17 +41,46 @@ it.
 `winget/<version>/`, three files as the schema requires: version, installer and
 `en-US` locale.
 
-Validate any change before submitting:
+Publishing means a pull request against
+[microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), which puts
+the three files under `manifests/g/goodmagma/Hostpad/<version>/`. Do not clone
+that repository to do it: it holds manifests for hundreds of thousands of
+packages. `wingetcreate` works through the API instead and never checks anything
+out.
+
+```bash
+winget install Microsoft.WingetCreate
+```
+
+```bash
+wingetcreate token --store
+```
+
+`token --store` with no `--token` after it starts a device login. Do not pass a
+personal access token on the command line, as the tool itself warns: it would
+land in the shell history.
+
+Validate, then submit:
 
 ```bash
 winget validate --manifest packaging/winget/1.0.3
 ```
 
-Publishing means opening a pull request against
-[microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), copying the
-three files to `manifests/g/goodmagma/Hostpad/<version>/`. Automated validation
-runs on the pull request and a moderator reviews it; the first submission for a
-new publisher takes longer than later ones.
+```bash
+wingetcreate submit packaging/winget/1.0.3
+```
+
+Two things will stop the first attempt, both once only. If you already have a
+fork of `winget-pkgs`, submitting fails with *the forked repository is behind by
+too many commits* — open the fork on GitHub, **Sync fork**, and run it again. And
+a Microsoft repository needs its contributor licence agreement signed: a bot
+comments on the pull request asking you to reply with a single line agreeing to
+it. Signing is per account and lasts.
+
+After that a pipeline downloads the installer, checks it against the hash in the
+manifest and installs it in a sandbox. A new package then waits for a human
+moderator, which is the slow part. Later versions of a package that already
+exists are merged without one.
 
 Once accepted:
 
@@ -59,20 +88,24 @@ Once accepted:
 winget install goodmagma.Hostpad
 ```
 
-`wingetcreate update` can produce the next version's manifests from the
-published ones, which is less error-prone than editing three files by hand:
+## Updating for a new release
+
+Scoop looks after itself. winget does not, so after a release the manifests here
+describe the previous one until someone bumps them.
+
+`wingetcreate update` does the whole thing — it fetches the published manifests,
+rewrites the version, downloads the file to compute its hash, and opens the pull
+request:
 
 ```bash
 wingetcreate update goodmagma.Hostpad --version 1.0.4 --urls https://github.com/goodmagma/Hostpad/releases/download/v1.0.4/Hostpad-1.0.4-win-x64.exe --submit
 ```
 
-## Updating for a new release
+Copy what it produces back into `packaging/winget/<version>/` so this directory
+keeps matching what was submitted.
 
-Scoop looks after itself. winget does not, so after a release the manifests here
-describe the previous one until someone bumps them: rename the directory, change
-`PackageVersion` in all three files, and update the URL, the hash and
-`ReleaseDate` in the installer manifest.
-
+By hand instead: rename the directory, change `PackageVersion` in all three
+files, and update the URL, the hash and `ReleaseDate` in the installer manifest.
 Take the hash from the release notes rather than recomputing it. The workflow
 computes it from the file it just built, which is the only reason it is worth
 anything — a hash produced afterwards from the same download proves nothing

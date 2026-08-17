@@ -97,12 +97,22 @@ through by hand.
 released code only and moves forward by fast-forward when a version ships;
 releases are cut by pushing a `v*` tag, which is what builds the downloads.
 
-Cutting one means, in order: bump `VersionPrefix` in `Directory.Build.props`,
-turn `## [Unreleased]` in `CHANGELOG.md` into `## [x.y.z] - <date>` with a fresh
-empty `Unreleased` above it and the compare links at the bottom updated, then
-fast-forward `master` and push the tag. The workflow reads the version from the
-tag and the notes from that changelog section, so a tag with no matching section
-still releases — with notes that say nothing.
+Cutting one, in order:
+
+1. Bump `VersionPrefix` in `Directory.Build.props`.
+2. In `CHANGELOG.md`, turn `## [Unreleased]` into `## [x.y.z] - <date>`, put a
+   fresh empty `Unreleased` above it, and update the compare links at the bottom.
+3. Commit on `develop`, then fast-forward `master` and push it.
+4. Push the `v*` tag. That is what builds the downloads.
+5. When the workflow has finished, bump the winget manifests to the version it
+   just published — see `packaging/README.md`. Scoop needs nothing.
+
+The workflow reads the version from the tag and the notes from that changelog
+section, so a tag with no matching section still releases, with notes that say
+nothing.
+
+Step 5 cannot be folded into the others: a manifest pins the SHA-256 of the file
+it installs, and that does not exist until the workflow has built it.
 
 Commit subjects follow what is already in the log: a type, a colon, and the
 change in the imperative, lowercase, no full stop.
