@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+# The self-contained build is the one packaged here: it carries the .NET runtime
+# inside it, so winget has no dependency to satisfy and the install cannot leave
+# the user with an application that will not start.
+
+PackageIdentifier: goodmagma.Hostpad
+PackageVersion: 1.0.2
+MinimumOSVersion: 10.0.0.0
+InstallerType: portable
+Commands:
+  - hostpad
+ReleaseDate: 2026-08-07
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/goodmagma/Hostpad/releases/download/v1.0.2/Hostpad-1.0.2-win-x64.exe
+    InstallerSha256: 632163BD40602D5E457529BC3D57F9C14351779E4E659769FF2AA29262A44A7D
+ManifestType: installer
+ManifestVersion: 1.6.0

@@ -1,0 +1,34 @@
+{
+    "version": "1.0.2",
+    "description": "A connection manager for Windows. Keep every remote machine in one place and open it with a double click.",
+    "homepage": "https://github.com/goodmagma/Hostpad",
+    "license": "GPL-3.0-or-later",
+    "notes": [
+        "Hostpad is not code-signed, so Windows may warn on first run.",
+        "Your connections stay in %USERPROFILE%\\.hostpad, outside the Scoop directory,",
+        "so uninstalling or updating Hostpad never touches them."
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/goodmagma/Hostpad/releases/download/v1.0.2/Hostpad-1.0.2-win-x64.exe#/Hostpad.exe",
+            "hash": "632163bd40602d5e457529bc3d57f9c14351779e4e659769ff2aa29262a44a7d"
+        }
+    },
+    "bin": "Hostpad.exe",
+    "shortcuts": [
+        [
+            "Hostpad.exe",
+            "Hostpad"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/goodmagma/Hostpad"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/goodmagma/Hostpad/releases/download/v$version/Hostpad-$version-win-x64.exe#/Hostpad.exe"
+            }
+        }
+    }
+}
