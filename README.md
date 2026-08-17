@@ -12,6 +12,8 @@
 
 <p align="center">
   <a href="https://github.com/goodmagma/Hostpad/releases/latest"><strong>Download the latest release</strong></a>
+  &nbsp;·&nbsp;
+  <a href="CHANGELOG.md">Changelog</a>
 </p>
 
 ![Hostpad](docs/screenshot.png)

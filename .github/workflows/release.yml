@@ -135,8 +135,42 @@ jobs:
 
           $checksums = $rows -join "`n"
 
+          # The changelog entry for this version, lifted out and put at the top
+          # of the notes. Written once, read in both places, so the two cannot
+          # drift. A version with no entry — a rehearsal build, or an entry
+          # someone forgot — leaves the section out rather than failing the
+          # release.
+          $changes = ''
+          $lines = Get-Content CHANGELOG.md
+          $heading = '^##\s+\[' + [regex]::Escape('${{ steps.version.outputs.version }}') + '\]'
+          $start = -1
+
+          for ($i = 0; $i -lt $lines.Count; $i++) {
+            if ($lines[$i] -match $heading) {
+              $start = $i + 1
+              break
+            }
+          }
+
+          if ($start -lt 0) {
+            Write-Warning 'No CHANGELOG.md entry for ${{ steps.version.outputs.version }}.'
+          }
+          else {
+            $entry = for ($i = $start; $i -lt $lines.Count -and $lines[$i] -notmatch '^##\s'; $i++) {
+              $lines[$i]
+            }
+
+            $entry = ($entry -join "`n").Trim()
+
+            # No wrapping heading: the entry brings its own Added/Fixed/Changed
+            # headings, and they belong at this level.
+            if ($entry) {
+              $changes = "$entry`n`n"
+            }
+          }
+
           @"
-          ### Download
+          $changes### Download
 
           | File | Use it when |
           | --- | --- |

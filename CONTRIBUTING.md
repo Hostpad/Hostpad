@@ -97,6 +97,13 @@ through by hand.
 released code only and moves forward by fast-forward when a version ships;
 releases are cut by pushing a `v*` tag, which is what builds the downloads.
 
+Cutting one means, in order: bump `VersionPrefix` in `Directory.Build.props`,
+turn `## [Unreleased]` in `CHANGELOG.md` into `## [x.y.z] - <date>` with a fresh
+empty `Unreleased` above it and the compare links at the bottom updated, then
+fast-forward `master` and push the tag. The workflow reads the version from the
+tag and the notes from that changelog section, so a tag with no matching section
+still releases — with notes that say nothing.
+
 Commit subjects follow what is already in the log: a type, a colon, and the
 change in the imperative, lowercase, no full stop.
 
@@ -123,6 +130,10 @@ about in review.
   voice; keep it.
 - CI runs the build and the tests on every pull request, and it must be green.
 - Say how you tested. "Builds" is not testing.
+- If someone using Hostpad would notice the change, add a line under
+  `## [Unreleased]` in `CHANGELOG.md`. Write it for them, not for the reviewer:
+  the release workflow copies that section into the release notes, so it is read
+  by people who never see this repository. Internal work needs no entry.
 
 Formatting-only churn across files you did not otherwise touch will be asked to
 come out.
