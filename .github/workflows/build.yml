@@ -3,6 +3,20 @@ name: build
 on:
   push:
     branches: [master, develop]
+    # A commit that touches no code has nothing to compile, and running the
+    # build anyway is not free: it can fail on its own, when a runner is rate
+    # limited fetching the actions it needs, and then a red mark sits on a
+    # branch where nothing is wrong.
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'packaging/**'
+      - 'LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
+
+  # Deliberately not filtered here. A required status check that never runs
+  # blocks the pull request instead of passing it, so pull requests always
+  # build, whatever they touch.
   pull_request:
 
 jobs:
