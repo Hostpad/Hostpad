@@ -155,8 +155,18 @@ public static class Vault
         }
     }
 
-    private static void VerifyFormat(VaultEnvelope envelope)
+    /// <summary>
+    /// Checks that an envelope is a Hostpad vault this build can read. Public
+    /// because callers that only inspect the header — asking whether a password
+    /// will be needed, say — must reject an unreadable file just as firmly as
+    /// <see cref="Open"/> does, rather than answering about bytes they do not
+    /// understand.
+    /// </summary>
+    /// <exception cref="VaultFormatException">Not a vault, or written by a newer build.</exception>
+    public static void VerifyFormat(VaultEnvelope envelope)
     {
+        ArgumentNullException.ThrowIfNull(envelope);
+
         if (envelope.Magic != VaultEnvelope.ExpectedMagic)
         {
             throw new VaultFormatException("This file is not a Hostpad vault.");

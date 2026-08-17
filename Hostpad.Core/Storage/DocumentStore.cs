@@ -25,6 +25,7 @@ public sealed class DocumentStore
     /// True when opening the file will require a master password. Reads only the
     /// envelope header, so the UI can decide whether to prompt before unlocking.
     /// </summary>
+    /// <exception cref="VaultFormatException">Not a vault, corrupted, or written by a newer build.</exception>
     public bool RequiresPassword()
     {
         var envelope = ReadEnvelope();
@@ -32,6 +33,7 @@ public sealed class DocumentStore
     }
 
     /// <summary>How the file on disk is protected. Reads the header only.</summary>
+    /// <exception cref="VaultFormatException">Not a vault, corrupted, or written by a newer build.</exception>
     public (bool HasPassword, bool HasDpapi) ProtectionInfo()
     {
         var envelope = ReadEnvelope();
@@ -97,14 +99,23 @@ public sealed class DocumentStore
 
         var bytes = File.ReadAllBytes(_path);
 
+        VaultEnvelope envelope;
+
         try
         {
-            return HostpadJson.Deserialize<VaultEnvelope>(bytes, HostpadJson.Options);
+            envelope = HostpadJson.Deserialize<VaultEnvelope>(bytes, HostpadJson.Options);
         }
         catch (Exception ex) when (ex is JsonException or InvalidDataException)
         {
             throw new VaultFormatException($"'{_path}' is not a readable Hostpad vault.", ex);
         }
+
+        // Checked here rather than only in Vault.Open, so that the header-only
+        // callers above refuse a file from a newer build instead of guessing at
+        // its protection and prompting for a password that would never work.
+        Vault.VerifyFormat(envelope);
+
+        return envelope;
     }
 
     private void WriteEnvelope(VaultEnvelope envelope)

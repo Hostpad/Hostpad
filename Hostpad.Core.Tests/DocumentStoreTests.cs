@@ -121,6 +121,51 @@ public sealed class DocumentStoreTests : IDisposable
         Assert.Empty(store.Load("pw").Connections);
     }
 
+    /// <summary>
+    /// Forges a vault written by a build that does not exist yet, by bumping the
+    /// version in the header of a real one. The payload stays readable, so a
+    /// failure can only come from the version check itself.
+    /// </summary>
+    private void WriteVaultFromTheFuture()
+    {
+        var store = new DocumentStore(VaultPath);
+        store.Save(SampleDocument(out _), PasswordOnly("pw"));
+
+        var json = File.ReadAllText(VaultPath).Replace(
+            $"\"formatVersion\": {VaultEnvelope.CurrentFormatVersion}",
+            $"\"formatVersion\": {VaultEnvelope.CurrentFormatVersion + 1}",
+            StringComparison.Ordinal);
+
+        File.WriteAllText(VaultPath, json);
+    }
+
+    [Fact]
+    public void RequiresPassword_RefusesAVaultFromANewerBuild()
+    {
+        WriteVaultFromTheFuture();
+
+        // Without the check this answers "yes, a password", and the user spends
+        // the next minute typing a correct password into a file no build here
+        // can open.
+        Assert.Throws<VaultFormatException>(() => new DocumentStore(VaultPath).RequiresPassword());
+    }
+
+    [Fact]
+    public void ProtectionInfo_RefusesAVaultFromANewerBuild()
+    {
+        WriteVaultFromTheFuture();
+
+        Assert.Throws<VaultFormatException>(() => new DocumentStore(VaultPath).ProtectionInfo());
+    }
+
+    [Fact]
+    public void Load_RefusesAVaultFromANewerBuild()
+    {
+        WriteVaultFromTheFuture();
+
+        Assert.Throws<VaultFormatException>(() => new DocumentStore(VaultPath).Load("pw"));
+    }
+
     [Fact]
     public void Load_FailsClearlyWhenThereIsNoVaultYet()
     {
