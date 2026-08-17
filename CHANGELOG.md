@@ -10,6 +10,8 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-08-17
+
 ### Added
 
 - Every release now publishes the SHA-256 of each file it contains, computed by
@@ -71,7 +73,8 @@ First release.
 - Follows the Windows light and dark theme; remembers window position, size and
   pane widths, and refuses to restore onto a monitor that is no longer there.
 
-[Unreleased]: https://github.com/goodmagma/Hostpad/compare/v1.0.2...develop
+[Unreleased]: https://github.com/goodmagma/Hostpad/compare/v1.0.3...develop
+[1.0.3]: https://github.com/goodmagma/Hostpad/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/goodmagma/Hostpad/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/goodmagma/Hostpad/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/goodmagma/Hostpad/releases/tag/v1.0.0

@@ -117,7 +117,7 @@ writes it into the release notes.
 So compare what you downloaded against what the workflow published:
 
 ```bash
-Get-FileHash .\Hostpad-1.0.2-win-x64.exe -Algorithm SHA256
+Get-FileHash .\Hostpad-<version>-win-x64.exe -Algorithm SHA256
 ```
 
 If the hash matches the one on the
