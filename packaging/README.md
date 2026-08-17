@@ -52,7 +52,7 @@ computes the new hash. No manual edit per release.
 Validate any change before submitting:
 
 ```bash
-winget validate --manifest packaging/winget/1.0.2
+winget validate --manifest packaging/winget/1.0.3
 ```
 
 Publishing means opening a pull request against
@@ -71,7 +71,7 @@ winget install goodmagma.Hostpad
 published ones, which is less error-prone than editing three files by hand:
 
 ```bash
-wingetcreate update goodmagma.Hostpad --version 1.0.3 --urls https://github.com/goodmagma/Hostpad/releases/download/v1.0.3/Hostpad-1.0.3-win-x64.exe --submit
+wingetcreate update goodmagma.Hostpad --version 1.0.4 --urls https://github.com/goodmagma/Hostpad/releases/download/v1.0.4/Hostpad-1.0.4-win-x64.exe --submit
 ```
 
 ## Updating for a new release

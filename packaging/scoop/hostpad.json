@@ -1,5 +1,5 @@
 {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "A connection manager for Windows. Keep every remote machine in one place and open it with a double click.",
     "homepage": "https://github.com/goodmagma/Hostpad",
     "license": "GPL-3.0-or-later",
@@ -10,8 +10,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/goodmagma/Hostpad/releases/download/v1.0.2/Hostpad-1.0.2-win-x64.exe#/Hostpad.exe",
-            "hash": "632163bd40602d5e457529bc3d57f9c14351779e4e659769ff2aa29262a44a7d"
+            "url": "https://github.com/goodmagma/Hostpad/releases/download/v1.0.3/Hostpad-1.0.3-win-x64.exe#/Hostpad.exe",
+            "hash": "7e663bc027c6a7b27c4d3aa8677d79e93e033f3c65029a4366d1adcef7d47841"
         }
     },
     "bin": "Hostpad.exe",
