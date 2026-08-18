@@ -36,7 +36,10 @@ public partial class App : Application
 
         if (e.Args.Contains("--demo"))
         {
-            RunDemo();
+            // --keep leaves the demo window open instead of capturing and
+            // exiting, which is what you want when taking screenshots by hand
+            // rather than regenerating the one in the readme.
+            RunDemo(keepOpen: e.Args.Contains("--keep"));
             return;
         }
 
@@ -172,7 +175,8 @@ public partial class App : Application
     /// Fills a throwaway vault with invented servers and captures the window,
     /// so the screenshot in the README never shows anyone's real machines.
     /// </summary>
-    private static void RunDemo()
+    /// <param name="keepOpen">Leave the window up for hand-taken screenshots.</param>
+    private static void RunDemo(bool keepOpen = false)
     {
         ApplicationThemeManager.Apply(ApplicationTheme.Dark);
 
@@ -235,6 +239,12 @@ public partial class App : Application
         window.ContentRendered += (_, _) =>
         {
             SelectDemoConnection(viewModel);
+
+            if (keepOpen)
+            {
+                return;
+            }
+
             window.Dispatcher.BeginInvoke(() =>
             {
                 CaptureWindow(window);

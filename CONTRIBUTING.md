@@ -182,6 +182,14 @@ one's real machines ever appear in it:
 dotnet run --project Hostpad.App -- --demo
 ```
 
+That captures the window and exits. Add `--keep` to leave it open instead, for
+screenshots taken by hand — a listing on a download site, say — without any risk
+of your own machines appearing in one:
+
+```bash
+dotnet run --project Hostpad.App -- --demo --keep
+```
+
 ## Packaging
 
 `packaging/` holds the winget manifests, pinned to a version and to the SHA-256
