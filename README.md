@@ -11,6 +11,13 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/goodmagma/Hostpad/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/goodmagma/Hostpad?color=1E62D0&label=release"></a>
+  <a href="https://github.com/goodmagma/Hostpad/actions/workflows/build.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/goodmagma/Hostpad/build.yml?branch=develop&label=build"></a>
+  <a href="LICENSE"><img alt="Licence" src="https://img.shields.io/github/license/goodmagma/Hostpad?color=1E62D0"></a>
+  <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-1E62D0">
+</p>
+
+<p align="center">
   <a href="https://github.com/goodmagma/Hostpad/releases/latest"><strong>Download the latest release</strong></a>
   &nbsp;·&nbsp;
   <a href="CHANGELOG.md">Changelog</a>
