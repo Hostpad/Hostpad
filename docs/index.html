@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hostpad — a connection manager for Windows</title>
+<meta name="description" content="Keep every remote machine in one place and open it with a double click: SSH, SFTP, SCP, FTP, Remote Desktop and VNC, through the client tools you already use.">
+<link rel="icon" href="icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hostpad — a connection manager for Windows">
+<meta property="og:description" content="Keep every remote machine in one place and open it with a double click. Free software, GPLv3.">
+<meta property="og:url" content="https://hostpad.github.io/Hostpad/">
+<meta property="og:image" content="https://hostpad.github.io/Hostpad/screenshot.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<style>
+:root {
+  color-scheme: light dark;
+  --brand: #1E62D0;
+  --brand-hover: #1a55b6;
+  --bg: #ffffff;
+  --bg-soft: #f5f7fa;
+  --border: #e3e7ee;
+  --text: #1a1d23;
+  --muted: #5a6472;
+  --code-bg: #f1f3f7;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #5b93ea;
+    --brand-hover: #79a8f2;
+    --bg: #14171c;
+    --bg-soft: #1b1f26;
+    --border: #2a3038;
+    --text: #e6e9ee;
+    --muted: #9aa4b2;
+    --code-bg: #1f242c;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 -apple-system, "Segoe UI Variable Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+a { color: var(--brand); }
+h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; }
+code, kbd {
+  font-family: "Cascadia Mono", "Consolas", ui-monospace, monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+pre code { background: none; padding: 0; }
+
+header { text-align: center; padding: 72px 0 8px; }
+header img.logo { width: 96px; height: 96px; }
+header h1 { font-size: 3rem; margin: 18px 0 8px; }
+header p.tagline {
+  font-size: 1.2rem; color: var(--muted);
+  max-width: 620px; margin: 0 auto 28px;
+}
+.buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 12px 26px; border-radius: 8px;
+  font-weight: 600; text-decoration: none;
+  border: 1px solid var(--brand); color: var(--brand);
+}
+.btn.primary { background: var(--brand); color: #fff; }
+.btn.primary:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
+.btn:hover { border-color: var(--brand-hover); }
+.badges { margin: 26px 0 0; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.badges img { height: 20px; }
+
+.shot {
+  margin: 48px 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  display: block;
+}
+
+section { padding: 44px 0; border-top: 1px solid var(--border); }
+section h2 { font-size: 1.7rem; margin-top: 0; }
+.lede { color: var(--muted); font-size: 1.05rem; max-width: 680px; }
+
+.grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.card {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+.card h3 { margin: 0 0 10px; font-size: 1.05rem; }
+.card ul { margin: 0; padding-left: 20px; }
+.card li { margin-bottom: 6px; }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0 56px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+footer a { color: var(--muted); }
+footer .links { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+footer .links a { color: var(--brand); text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <img class="logo" src="icon.png" alt="">
+  <h1>Hostpad</h1>
+  <p class="tagline">
+    A connection manager for Windows. Keep every remote machine in one place and
+    open it with a double click — SSH, SFTP, SCP, FTP, Remote Desktop or VNC,
+    through the client tools you already use.
+  </p>
+  <div class="buttons">
+    <a class="btn primary" href="https://github.com/Hostpad/Hostpad/releases/latest">Download for Windows</a>
+    <a class="btn" href="https://github.com/Hostpad/Hostpad">Source on GitHub</a>
+  </div>
+  <p class="badges">
+    <img alt="Latest release" src="https://img.shields.io/github/v/release/Hostpad/Hostpad?color=1E62D0&label=release">
+    <img alt="Licence" src="https://img.shields.io/github/license/Hostpad/Hostpad?color=1E62D0">
+    <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-1E62D0">
+  </p>
+  <img class="shot" src="screenshot.png" alt="The Hostpad window: a folder tree of connections on the left, connection details on the right.">
+</header>
+
+<section>
+  <h2>An address book, not another terminal</h2>
+  <p class="lede">
+    Hostpad keeps the list, the credentials and the notes. PuTTY, WinSCP, mstsc
+    and your VNC viewer keep doing what they are good at.
+  </p>
+  <p class="lede">
+    The idea comes from <a href="https://github.com/r4dius/AutoPuTTY">AutoPuTTY</a>,
+    a tool that did this job well for many years. Hostpad is freely inspired by
+    it — no fork, no shared code, written from scratch — and brings the idea up
+    to date: folders, real encryption, a Windows 11 interface, and the fields
+    that used to be encoded inside other fields turned into fields of their own.
+  </p>
+</section>
+
+<section>
+  <h2>What it does</h2>
+  <div class="grid">
+
+    <div class="card">
+      <h3>Organise</h3>
+      <ul>
+        <li>Nested folders, and connections that belong to no folder at all</li>
+        <li>Drag and drop, rename in place with <kbd>F2</kbd></li>
+        <li>Search across name, host, user and notes — the tree flattens while you hunt</li>
+        <li>A notes field per connection, for the things you always forget</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Connect</h3>
+      <ul>
+        <li>PuTTY, Remote Desktop, VNC, and WinSCP in SFTP, SCP and FTP modes</li>
+        <li>Right click opens the same host with any of the other tools</li>
+        <li>SSH jump hosts as real fields, tunnelled through plink</li>
+        <li>Private keys, post-login commands, X11 forwarding, screen size, mounted drives</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Protect</h3>
+      <ul>
+        <li>The list is encrypted with AES-256-GCM, always</li>
+        <li>Without a master password it is tied to your Windows account through DPAPI: no prompt, and useless to anyone who copies the file</li>
+        <li>With one it opens on another computer too — which is what makes a backup worth having</li>
+        <li>PBKDF2-HMAC-SHA256, with the iteration count stored in the file so it can be raised later</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Move data in and out</h3>
+      <ul>
+        <li>Import from AutoPuTTY: passwords, notes, folders recovered from name prefixes, jump hosts</li>
+        <li>Export a password-protected copy, with or without the saved credentials</li>
+        <li>Import merges rather than replaces, and asks about names that already exist</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Install</h2>
+
+  <p class="lede">
+    Take <code>Hostpad-&lt;version&gt;-win-x64.exe</code> from the
+    <a href="https://github.com/Hostpad/Hostpad/releases/latest">release page</a>
+    and run it: it carries the .NET runtime inside and needs nothing installed.
+    The smaller builds need the
+    <a href="https://dotnet.microsoft.com/download/dotnet/10.0">.NET 10 Desktop Runtime</a>.
+  </p>
+
+  <p>Or through <a href="https://scoop.sh">Scoop</a>, which checks the download for you:</p>
+<pre><code>scoop bucket add hostpad https://github.com/Hostpad/scoop-bucket
+scoop install hostpad/hostpad</code></pre>
+
+  <p>
+    Your data lives in <code>%USERPROFILE%\.hostpad</code>. Windows 10 or 11,
+    64-bit.
+  </p>
+</section>
+
+<section>
+  <h2>Verifying your download</h2>
+  <p class="lede">
+    Hostpad is not code-signed, so SmartScreen warns the first time you run it:
+    <em>Windows protected your PC</em> → <strong>More info → Run anyway</strong>.
+    A certificate costs money the project does not have.
+  </p>
+  <p class="lede">
+    What you get instead is a hash, and a build you can trace. Every release is
+    produced by the release workflow on the GitHub runners from the tagged
+    commit — no file on a release page is uploaded from a developer machine —
+    and the SHA-256 of each file is written into the release notes.
+  </p>
+<pre><code>Get-FileHash .\Hostpad-&lt;version&gt;-win-x64.exe -Algorithm SHA256</code></pre>
+  <p>
+    If it matches the release page, the file is the one the workflow built. If it
+    does not, do not run it, wherever you got it from.
+  </p>
+</section>
+
+<section>
+  <h2>Free software</h2>
+  <p class="lede">
+    GPLv3 or later. Fork it, modify it, redistribute it. The <strong>name
+    &ldquo;Hostpad&rdquo; is not covered by that licence</strong>: please rename
+    your fork so users can tell the projects apart.
+  </p>
+  <p class="lede">
+    The only official releases are published at
+    <a href="https://github.com/Hostpad/Hostpad">github.com/Hostpad/Hostpad</a>.
+    Copies distributed elsewhere, in particular paid ones, are not from us.
+  </p>
+  <p class="lede">
+    Bug reports, ideas and patches are welcome.
+  </p>
+</section>
+
+<footer>
+  <div class="links">
+    <a href="https://github.com/Hostpad/Hostpad">GitHub</a>
+    <a href="https://github.com/Hostpad/Hostpad/releases/latest">Releases</a>
+    <a href="https://github.com/Hostpad/Hostpad/blob/master/CHANGELOG.md">Changelog</a>
+    <a href="https://github.com/Hostpad/Hostpad/issues">Issues</a>
+    <a href="https://github.com/Hostpad/Hostpad/blob/master/SECURITY.md">Security</a>
+    <a href="https://github.com/Hostpad/Hostpad/blob/master/CONTRIBUTING.md">Contributing</a>
+  </div>
+  <p>
+    Hostpad is freely inspired by <a href="https://github.com/r4dius/AutoPuTTY">AutoPuTTY</a>
+    by r4dius, and shares no code with it. Built with
+    <a href="https://github.com/lepoco/wpfui">WPF-UI</a> and
+    <a href="https://github.com/dotnet/runtime">.NET</a>.
+  </p>
+  <p>© 2026 Denis Torresan — GNU General Public License v3.0 or later.</p>
+</footer>
+
+</div>
+</body>
+</html>
