@@ -11,14 +11,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/goodmagma/Hostpad/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/goodmagma/Hostpad?color=1E62D0&label=release"></a>
-  <a href="https://github.com/goodmagma/Hostpad/actions/workflows/build.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/goodmagma/Hostpad/build.yml?branch=develop&label=build"></a>
-  <a href="LICENSE"><img alt="Licence" src="https://img.shields.io/github/license/goodmagma/Hostpad?color=1E62D0"></a>
+  <a href="https://github.com/Hostpad/Hostpad/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Hostpad/Hostpad?color=1E62D0&label=release"></a>
+  <a href="https://github.com/Hostpad/Hostpad/actions/workflows/build.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/Hostpad/Hostpad/build.yml?branch=develop&label=build"></a>
+  <a href="LICENSE"><img alt="Licence" src="https://img.shields.io/github/license/Hostpad/Hostpad?color=1E62D0"></a>
   <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-1E62D0">
 </p>
 
 <p align="center">
-  <a href="https://github.com/goodmagma/Hostpad/releases/latest"><strong>Download the latest release</strong></a>
+  <a href="https://github.com/Hostpad/Hostpad/releases/latest"><strong>Download the latest release</strong></a>
   &nbsp;·&nbsp;
   <a href="CHANGELOG.md">Changelog</a>
 </p>
@@ -128,7 +128,7 @@ Get-FileHash .\Hostpad-<version>-win-x64.exe -Algorithm SHA256
 ```
 
 If the hash matches the one on the
-[release page](https://github.com/goodmagma/Hostpad/releases/latest), the file
+[release page](https://github.com/Hostpad/Hostpad/releases/latest), the file
 is the one the workflow built. If it does not, do not run it, wherever you got
 it from.
 
@@ -136,11 +136,11 @@ it from.
 hash and Scoop refuses a file that does not match.
 
 ```bash
-scoop bucket add goodmagma https://github.com/goodmagma/scoop-bucket
+scoop bucket add hostpad https://github.com/Hostpad/scoop-bucket
 ```
 
 ```bash
-scoop install goodmagma/hostpad
+scoop install hostpad/hostpad
 ```
 
 `scoop update hostpad` then follows new releases, checking each download the
@@ -250,7 +250,7 @@ The **name "Hostpad" is not covered by that licence**: please rename your fork s
 users can tell the projects apart.
 
 The only official releases are published at
-<https://github.com/goodmagma/Hostpad>. Copies distributed elsewhere, in
+<https://github.com/Hostpad/Hostpad>. Copies distributed elsewhere, in
 particular paid ones, are not from us.
 
 ## Licence

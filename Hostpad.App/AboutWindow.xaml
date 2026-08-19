@@ -44,8 +44,8 @@
                 <Run Text="  GNU General Public License v3.0 or later" />
             </TextBlock>
 
-            <ui:HyperlinkButton Content="github.com/goodmagma/Hostpad"
-                                NavigateUri="https://github.com/goodmagma/Hostpad"
+            <ui:HyperlinkButton Content="github.com/Hostpad/Hostpad"
+                                NavigateUri="https://github.com/Hostpad/Hostpad"
                                 Padding="0,4"
                                 HorizontalAlignment="Left" />
 

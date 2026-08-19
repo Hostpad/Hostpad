@@ -4,7 +4,7 @@
 # inside it, so winget has no dependency to satisfy and the install cannot leave
 # the user with an application that will not start.
 
-PackageIdentifier: goodmagma.Hostpad
+PackageIdentifier: Hostpad.Hostpad
 PackageVersion: 1.0.3
 MinimumOSVersion: 10.0.0.0
 InstallerType: portable
@@ -13,7 +13,7 @@ Commands:
 ReleaseDate: 2026-08-17
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/goodmagma/Hostpad/releases/download/v1.0.3/Hostpad-1.0.3-win-x64.exe
+    InstallerUrl: https://github.com/Hostpad/Hostpad/releases/download/v1.0.3/Hostpad-1.0.3-win-x64.exe
     InstallerSha256: 7E663BC027C6A7B27C4D3AA8677D79E93E033F3C65029A4366D1ADCEF7D47841
 ManifestType: installer
 ManifestVersion: 1.6.0

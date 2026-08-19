@@ -16,15 +16,15 @@ manager owns.
 ## Scoop
 
 The manifest does **not** live here. It is in
-[goodmagma/scoop-bucket](https://github.com/goodmagma/scoop-bucket), because
+[Hostpad/scoop-bucket](https://github.com/Hostpad/scoop-bucket), because
 Scoop installs from a *bucket*, which is a Git repository of manifests.
 
 ```bash
-scoop bucket add goodmagma https://github.com/goodmagma/scoop-bucket
+scoop bucket add hostpad https://github.com/Hostpad/scoop-bucket
 ```
 
 ```bash
-scoop install goodmagma/hostpad
+scoop install hostpad/hostpad
 ```
 
 There was a copy in this directory. It is gone on purpose: the bucket runs the
@@ -43,7 +43,7 @@ it.
 
 Publishing means a pull request against
 [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs), which puts
-the three files under `manifests/g/goodmagma/Hostpad/<version>/`. Do not clone
+the three files under `manifests/h/Hostpad/Hostpad/<version>/`. Do not clone
 that repository to do it: it holds manifests for hundreds of thousands of
 packages. `wingetcreate` works through the API instead and never checks anything
 out.
@@ -85,7 +85,7 @@ exists are merged without one.
 Once accepted:
 
 ```bash
-winget install goodmagma.Hostpad
+winget install Hostpad.Hostpad
 ```
 
 ## Updating for a new release
@@ -98,7 +98,7 @@ rewrites the version, downloads the file to compute its hash, and opens the pull
 request:
 
 ```bash
-wingetcreate update goodmagma.Hostpad --version 1.0.4 --urls https://github.com/goodmagma/Hostpad/releases/download/v1.0.4/Hostpad-1.0.4-win-x64.exe --submit
+wingetcreate update Hostpad.Hostpad --version 1.0.4 --urls https://github.com/Hostpad/Hostpad/releases/download/v1.0.4/Hostpad-1.0.4-win-x64.exe --submit
 ```
 
 Copy what it produces back into `packaging/winget/<version>/` so this directory

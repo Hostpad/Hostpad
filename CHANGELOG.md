@@ -12,7 +12,7 @@ release notes, so it is written once and read in both places.
 
 ### Added
 
-- Hostpad can be installed with Scoop, from the `goodmagma` bucket. Scoop checks
+- Hostpad can be installed with Scoop, from the `hostpad` bucket. Scoop checks
   the download against the hash the release workflow published, which is the
   verification an unsigned build otherwise asks you to do by hand, and
   `scoop update` follows new releases.
@@ -80,8 +80,8 @@ First release.
 - Follows the Windows light and dark theme; remembers window position, size and
   pane widths, and refuses to restore onto a monitor that is no longer there.
 
-[Unreleased]: https://github.com/goodmagma/Hostpad/compare/v1.0.3...develop
-[1.0.3]: https://github.com/goodmagma/Hostpad/compare/v1.0.2...v1.0.3
-[1.0.2]: https://github.com/goodmagma/Hostpad/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/goodmagma/Hostpad/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/goodmagma/Hostpad/releases/tag/v1.0.0
+[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.0.3...develop
+[1.0.3]: https://github.com/Hostpad/Hostpad/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/Hostpad/Hostpad/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/Hostpad/Hostpad/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/Hostpad/Hostpad/releases/tag/v1.0.0

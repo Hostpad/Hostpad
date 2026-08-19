@@ -12,7 +12,7 @@ body:
 
         Anything touching the vault, the encryption or the master password is a
         security matter and does not belong in a public issue. Use
-        [private reporting](https://github.com/goodmagma/Hostpad/security/advisories/new)
+        [private reporting](https://github.com/Hostpad/Hostpad/security/advisories/new)
         instead.
 
   - type: input

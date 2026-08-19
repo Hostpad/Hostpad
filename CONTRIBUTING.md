@@ -198,7 +198,7 @@ release they describe the previous one until someone bumps them;
 `packaging/README.md` says how, and how they get published.
 
 The Scoop manifest is not here. It lives in
-[goodmagma/scoop-bucket](https://github.com/goodmagma/scoop-bucket), where an
+[Hostpad/scoop-bucket](https://github.com/Hostpad/scoop-bucket), where an
 action follows new releases and commits the new hash on its own.
 
 Take hashes from the release notes rather than recomputing them. The workflow

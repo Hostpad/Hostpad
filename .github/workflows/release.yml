@@ -192,7 +192,7 @@ jobs:
           | --- | --- |
           $checksums
 
-          Every release is built by [this workflow](https://github.com/goodmagma/Hostpad/blob/master/.github/workflows/release.yml)
+          Every release is built by [this workflow](https://github.com/Hostpad/Hostpad/blob/master/.github/workflows/release.yml)
           from the tagged commit. No file here is uploaded from a developer machine.
           "@ | Out-File notes.md -Encoding utf8
 
