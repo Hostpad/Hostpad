@@ -20,6 +20,8 @@
 <p align="center">
   <a href="https://github.com/Hostpad/Hostpad/releases/latest"><strong>Download the latest release</strong></a>
   &nbsp;·&nbsp;
+  <a href="https://hostpad.github.io">Website</a>
+  &nbsp;·&nbsp;
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
