@@ -10,12 +10,21 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-08-19
+
 ### Added
 
 - Hostpad can be installed with Scoop, from the `hostpad` bucket. Scoop checks
   the download against the hash the release workflow published, which is the
   verification an unsigned build otherwise asks you to do by hand, and
   `scoop update` follows new releases.
+
+### Changed
+
+- Hostpad now lives at <https://github.com/Hostpad/Hostpad>, in an organisation
+  of its own. Old links redirect, and nothing needs doing if you downloaded a
+  release or installed with Scoop. Bookmarks and clones are worth updating all
+  the same.
 
 ### Fixed
 
@@ -89,7 +98,8 @@ First release.
 - Follows the Windows light and dark theme; remembers window position, size and
   pane widths, and refuses to restore onto a monitor that is no longer there.
 
-[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.0.3...develop
+[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.0.4...develop
+[1.0.4]: https://github.com/Hostpad/Hostpad/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Hostpad/Hostpad/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Hostpad/Hostpad/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Hostpad/Hostpad/compare/v1.0.0...v1.0.1
