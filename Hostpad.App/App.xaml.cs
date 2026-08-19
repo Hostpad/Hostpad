@@ -180,9 +180,19 @@ public partial class App : Application
     {
         ApplicationThemeManager.Apply(ApplicationTheme.Dark);
 
-        var session = new VaultSession();
-        session.UseVaultAt(System.IO.Path.Combine(
-            System.IO.Path.GetTempPath(), $"hostpad-demo-{Guid.NewGuid():N}.hpx"));
+        // Both files are throwaway. The settings must be redirected as well as
+        // the vault: they record which vault to open, so a demo that wrote into
+        // the real settings would leave Hostpad opening a temporary file for
+        // good, and the user staring at invented servers instead of their own.
+        var scratch = System.IO.Path.Combine(
+            System.IO.Path.GetTempPath(), $"hostpad-demo-{Guid.NewGuid():N}");
+
+        System.IO.Directory.CreateDirectory(scratch);
+
+        var session = new VaultSession(
+            System.IO.Path.Combine(scratch, "settings.json"),
+            System.IO.Path.Combine(scratch, "connections.hpx"));
+
         session.Open();
 
         var document = session.Document;

@@ -21,10 +21,23 @@ public sealed class VaultSession
     private string? _password;
 
     public VaultSession()
+        : this(null, null)
     {
-        _settingsStore = new SettingsStore();
+    }
+
+    /// <summary>
+    /// A session pointed at files other than the user's own. Demo mode needs it:
+    /// redirecting an ordinary session with <see cref="UseVaultAt"/> writes the
+    /// new path into the shared settings, so a throwaway vault would go on being
+    /// opened at every launch afterwards, hiding the real connection list.
+    /// </summary>
+    /// <param name="settingsPath">Null for the user's own settings file.</param>
+    /// <param name="documentPath">Null to use whatever the settings name.</param>
+    public VaultSession(string? settingsPath, string? documentPath)
+    {
+        _settingsStore = new SettingsStore(settingsPath);
         Settings = _settingsStore.Load();
-        _documentStore = new DocumentStore(Settings.DocumentPath);
+        _documentStore = new DocumentStore(documentPath ?? Settings.DocumentPath);
         Document = new HostpadDocument();
     }
 
@@ -47,7 +60,14 @@ public sealed class VaultSession
     /// </summary>
     public void Open(string? password = null)
     {
-        AppPaths.EnsureDataDirectory();
+        // The vault's own directory, not the fixed one: a session pointed
+        // elsewhere must not have to create the user's data folder to open.
+        var directory = System.IO.Path.GetDirectoryName(_documentStore.Path);
+
+        if (!string.IsNullOrEmpty(directory))
+        {
+            System.IO.Directory.CreateDirectory(directory);
+        }
 
         if (!_documentStore.Exists)
         {

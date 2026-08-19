@@ -17,6 +17,15 @@ release notes, so it is written once and read in both places.
   verification an unsigned build otherwise asks you to do by hand, and
   `scoop update` follows new releases.
 
+### Fixed
+
+- Demo mode wrote the path of its throwaway vault into the real settings, so
+  every later launch opened that temporary file and showed invented servers
+  instead of your own connections. Nothing was lost when this happened — the
+  real vault was untouched, merely no longer the one being opened — but the only
+  way back was to edit the settings by hand. A demo session now keeps its
+  settings beside its vault, in a directory of its own.
+
 ## [1.0.3] - 2026-08-17
 
 ### Added
