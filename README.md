@@ -22,6 +22,8 @@
   &nbsp;·&nbsp;
   <a href="https://hostpad.github.io">Website</a>
   &nbsp;·&nbsp;
+  <a href="https://hostpad.github.io/why/">Why this exists</a>
+  &nbsp;·&nbsp;
   <a href="CHANGELOG.md">Changelog</a>
 </p>
 
@@ -38,6 +40,10 @@ that did this job well for many years. Hostpad is freely inspired by it — no
 fork, no shared code, written from scratch — and brings the idea up to date:
 folders, real encryption, a Windows 11 interface, and the fields that used to be
 encoded inside other fields turned into fields of their own.
+
+The longer version — seventeen years on one tool, what a flat list does at
+twenty clients, and why this is a rewrite rather than a fork — is written up at
+[hostpad.github.io/why](https://hostpad.github.io/why/).
 
 ## Features
 
