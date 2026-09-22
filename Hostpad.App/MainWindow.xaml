@@ -253,6 +253,7 @@
                 <StackPanel Grid.Row="4" Margin="0,0,0,8">
                     <TextBlock Text="Notes" Style="{StaticResource FieldLabel}" />
                     <ui:TextBox Text="{Binding Editor.Notes, UpdateSourceTrigger=PropertyChanged}"
+                                local:TerminalSafeCopy.Enabled="True"
                                 AcceptsReturn="True"
                                 TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
