@@ -10,11 +10,20 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-09-24
+
 ### Added
 
 - Hostpad can be installed with `winget install Hostpad.Hostpad`. winget checks
   the download against the hash in the manifest, the same verification Scoop
   does, so neither route leaves the unsigned build to be checked by hand.
+
+### Changed
+
+- The fields in the connection editor and in the settings no longer have a
+  button that empties them. On the notes it sat exactly where the pointer ends
+  up when selecting a line, and one stray click wiped the whole note. Only the
+  search box keeps it, where clearing is what you want and nothing is lost.
 
 ### Fixed
 
@@ -112,7 +121,8 @@ First release.
 - Follows the Windows light and dark theme; remembers window position, size and
   pane widths, and refuses to restore onto a monitor that is no longer there.
 
-[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.0.4...develop
+[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.0.5...develop
+[1.0.5]: https://github.com/Hostpad/Hostpad/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Hostpad/Hostpad/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Hostpad/Hostpad/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Hostpad/Hostpad/compare/v1.0.1...v1.0.2
