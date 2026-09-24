@@ -252,8 +252,12 @@
 
                 <StackPanel Grid.Row="4" Margin="0,0,0,8">
                     <TextBlock Text="Notes" Style="{StaticResource FieldLabel}" />
+                    <!-- No clear button: it sits over the text, one click wipes
+                         the whole note, and notes are where the commands and
+                         the things nobody remembers are kept. -->
                     <ui:TextBox Text="{Binding Editor.Notes, UpdateSourceTrigger=PropertyChanged}"
                                 local:TerminalSafeCopy.Enabled="True"
+                                ClearButtonEnabled="False"
                                 AcceptsReturn="True"
                                 TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
