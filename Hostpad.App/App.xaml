@@ -12,6 +12,24 @@
             <FontFamily x:Key="FluentIconFont">pack://application:,,,/Wpf.Ui;component/Resources/Fonts/#FluentSystemIcons-Regular</FontFamily>
 
             <!--
+              WPF-UI puts a clear button inside every text box. It floats over
+              the text at the right-hand edge — where the pointer travels when
+              selecting to the end of a line — and one click empties the field.
+              For a hostname, a key path or a note that is a small disaster and
+              the button saves a keystroke, so it is off everywhere by default.
+              Anything that genuinely wants one, like the search box, asks for
+              it: new fields are then safe without anyone remembering to make
+              them so.
+            -->
+            <Style TargetType="{x:Type ui:TextBox}" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                <Setter Property="ClearButtonEnabled" Value="False" />
+            </Style>
+
+            <Style TargetType="{x:Type ui:PasswordBox}" BasedOn="{StaticResource {x:Type ui:PasswordBox}}">
+                <Setter Property="ClearButtonEnabled" Value="False" />
+            </Style>
+
+            <!--
               WPF-UI's context menu slides in from 90 pixels above its final
               position, which reads as the menu falling into place rather than
               opening where it was asked for. The animation lives inside the
