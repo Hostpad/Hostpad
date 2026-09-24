@@ -70,11 +70,13 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Password" Style="{StaticResource Label}" />
-                                <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                ClearButtonEnabled="False" />
                             </StackPanel>
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Confirm" Style="{StaticResource Label}" />
-                                <ui:PasswordBox Password="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <ui:PasswordBox Password="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                ClearButtonEnabled="False" />
                             </StackPanel>
                         </Grid>
 
@@ -127,17 +129,20 @@
                     <TextBlock Text="Path (putty.exe)" Style="{StaticResource Label}" />
                     <DockPanel>
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowsePutty" />
-                        <ui:TextBox Text="{Binding PuttyPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding PuttyPath, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </DockPanel>
 
                     <CheckBox Content="Execute commands" Margin="0,10,0,4" IsChecked="{Binding PuttyExecuteCommands}" />
                     <ui:TextBox Text="{Binding PuttyCommand, UpdateSourceTrigger=PropertyChanged}"
+                                ClearButtonEnabled="False"
                                 IsEnabled="{Binding PuttyExecuteCommands}" />
 
                     <CheckBox Content="Private key file for authentication" Margin="0,10,0,4" IsChecked="{Binding PuttyUseKeyFile}" />
                     <DockPanel IsEnabled="{Binding PuttyUseKeyFile}">
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowsePuttyKey" />
-                        <ui:TextBox Text="{Binding PuttyKeyFile, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding PuttyKeyFile, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </DockPanel>
 
                     <TextBlock Text="Other" Style="{StaticResource Section}" />
@@ -150,18 +155,21 @@
                     <TextBlock Text="Path (mstsc.exe)" Style="{StaticResource Label}" />
                     <DockPanel>
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseRdp" />
-                        <ui:TextBox Text="{Binding RdpPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding RdpPath, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </DockPanel>
 
                     <TextBlock Text="Where to keep generated .rdp files" Style="{StaticResource Section}" />
                     <DockPanel>
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseRdpOutput" />
                         <ui:TextBox Text="{Binding RdpOutputPath, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False"
                                     PlaceholderText="Temporary, deleted after launch" />
                     </DockPanel>
 
                     <TextBlock Text="Screen size" Style="{StaticResource Section}" />
                     <ui:TextBox Text="{Binding RdpScreenSize, UpdateSourceTrigger=PropertyChanged}"
+                                ClearButtonEnabled="False"
                                 PlaceholderText="1920x1080"
                                 Width="200"
                                 HorizontalAlignment="Left" />
@@ -178,13 +186,15 @@
                     <TextBlock Text="Path (vncviewer.exe)" Style="{StaticResource Label}" />
                     <DockPanel>
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseVnc" />
-                        <ui:TextBox Text="{Binding VncPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding VncPath, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </DockPanel>
 
                     <TextBlock Text="Where to keep generated .vnc files" Style="{StaticResource Section}" />
                     <DockPanel>
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseVncOutput" />
                         <ui:TextBox Text="{Binding VncOutputPath, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False"
                                     PlaceholderText="Temporary, deleted after launch" />
                     </DockPanel>
 
@@ -199,13 +209,15 @@
                     <TextBlock Text="Path (winscp.exe)" Style="{StaticResource Label}" />
                     <DockPanel>
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseWinScp" />
-                        <ui:TextBox Text="{Binding WinScpPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding WinScpPath, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </DockPanel>
 
                     <CheckBox Content="Private key file for authentication" Margin="0,10,0,4" IsChecked="{Binding WinScpUseKeyFile}" />
                     <DockPanel IsEnabled="{Binding WinScpUseKeyFile}">
                         <ui:Button DockPanel.Dock="Right" Style="{StaticResource BrowseButton}" Click="OnBrowseWinScpKey" />
-                        <ui:TextBox Text="{Binding WinScpKeyFile, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding WinScpKeyFile, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </DockPanel>
 
                     <TextBlock Text="Other" Style="{StaticResource Section}" />

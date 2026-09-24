@@ -98,10 +98,7 @@
                                ToolTip="New group"
                                Margin="4,0,0,0"
                                Command="{Binding NewGroupCommand}" />
-                    <!-- Clear buttons are off by default (App.xaml); search
-                         is the one field where clearing loses nothing. -->
                     <ui:TextBox x:Name="SearchBox"
-                                ClearButtonEnabled="True"
                                 Grid.Column="2"
                                 Height="{StaticResource ToolBarHeight}"
                                 Margin="6,0,4,0"
@@ -214,12 +211,14 @@
 
                 <StackPanel Grid.Row="0" Margin="0,0,0,8">
                     <TextBlock Text="Name" Style="{StaticResource FieldLabel}" />
-                    <ui:TextBox Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}" />
+                    <ui:TextBox Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}"
+                                ClearButtonEnabled="False" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0,0,0,8">
                     <TextBlock Text="Hostname[:port]" Style="{StaticResource FieldLabel}" />
                     <ui:TextBox Text="{Binding Editor.Host, UpdateSourceTrigger=PropertyChanged}"
+                                ClearButtonEnabled="False"
                                 FontFamily="Cascadia Mono, Consolas" />
                 </StackPanel>
 
@@ -231,11 +230,13 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Username" Style="{StaticResource FieldLabel}" />
-                        <ui:TextBox Text="{Binding Editor.Username, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:TextBox Text="{Binding Editor.Username, UpdateSourceTrigger=PropertyChanged}"
+                                    ClearButtonEnabled="False" />
                     </StackPanel>
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Password" Style="{StaticResource FieldLabel}" />
                         <ui:PasswordBox Password="{Binding Editor.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        ClearButtonEnabled="False"
                                         RevealButtonEnabled="True" />
                     </StackPanel>
                 </Grid>
@@ -255,8 +256,12 @@
 
                 <StackPanel Grid.Row="4" Margin="0,0,0,8">
                     <TextBlock Text="Notes" Style="{StaticResource FieldLabel}" />
+                    <!-- No clear button: it sits over the text, one click wipes
+                         the whole note, and notes are where the commands and
+                         the things nobody remembers are kept. -->
                     <ui:TextBox Text="{Binding Editor.Notes, UpdateSourceTrigger=PropertyChanged}"
                                 local:TerminalSafeCopy.Enabled="True"
+                                ClearButtonEnabled="False"
                                 AcceptsReturn="True"
                                 TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
