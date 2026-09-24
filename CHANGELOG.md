@@ -10,6 +10,11 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+### Fixed
+
+- Pointing at a connection lit up its folder as well, as if both were under the
+  pointer. Only the row actually under it is highlighted now.
+
 ## [1.0.5] - 2026-09-24
 
 ### Added
