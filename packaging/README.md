@@ -63,11 +63,11 @@ land in the shell history.
 Validate, then submit:
 
 ```bash
-winget validate --manifest packaging/winget/1.0.3
+winget validate --manifest packaging/winget/1.0.5
 ```
 
 ```bash
-wingetcreate submit packaging/winget/1.0.3
+wingetcreate submit packaging/winget/1.0.5
 ```
 
 Two things will stop the first attempt, both once only. If you already have a
@@ -98,11 +98,17 @@ rewrites the version, downloads the file to compute its hash, and opens the pull
 request:
 
 ```bash
-wingetcreate update Hostpad.Hostpad --version 1.0.4 --urls https://github.com/Hostpad/Hostpad/releases/download/v1.0.4/Hostpad-1.0.4-win-x64.exe --submit
+wingetcreate update Hostpad.Hostpad --version 1.0.5 --urls https://github.com/Hostpad/Hostpad/releases/download/v1.0.5/Hostpad-1.0.5-win-x64.exe --submit
 ```
 
 Copy what it produces back into `packaging/winget/<version>/` so this directory
 keeps matching what was submitted.
+
+Read the locale manifest before it goes out. For 1.0.5 `wingetcreate` added a
+`Documentations` entry pointing at a wiki the repository does not have; GitHub
+answers that link with a redirect to the repository, so it looks alive and is
+not. Run with `--out <dir>` instead of `--submit`, fix what needs fixing, then
+`wingetcreate submit <dir>/manifests/h/Hostpad/Hostpad/<version>`.
 
 By hand instead: rename the directory, change `PackageVersion` in all three
 files, and update the URL, the hash and `ReleaseDate` in the installer manifest.
