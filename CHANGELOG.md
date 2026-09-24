@@ -10,6 +10,20 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+### Added
+
+- Hostpad can be installed with `winget install Hostpad.Hostpad`. winget checks
+  the download against the hash in the manifest, the same verification Scoop
+  does, so neither route leaves the unsigned build to be checked by hand.
+
+### Fixed
+
+- Copying a line out of the notes no longer puts a line break on the end of it.
+  Selecting a line by dragging to its end takes the break with it, which is
+  harmless until the text is pasted into a terminal, where a trailing newline is
+  Enter: a note holding a command ran it before it had been read back. Only the
+  clipboard changed; the selection and the text itself behave as before.
+
 ## [1.0.4] - 2026-08-19
 
 ### Added

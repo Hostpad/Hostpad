@@ -154,6 +154,13 @@ scoop install hostpad/hostpad
 `scoop update hostpad` then follows new releases, checking each download the
 same way.
 
+winget does the same check, against the hash in the manifest Microsoft
+publishes:
+
+```bash
+winget install Hostpad.Hostpad
+```
+
 ## Building
 
 Building needs the .NET 10 **SDK**, which is a different package from the
