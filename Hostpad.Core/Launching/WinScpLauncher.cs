@@ -40,9 +40,11 @@ public sealed class WinScpLauncher : ILauncher
 
         var arguments = new List<string> { $"{scheme}://{authority}/" };
 
-        if (settings.UseKeyFile && !string.IsNullOrWhiteSpace(settings.KeyFilePath))
+        // FTP has no key authentication; WinSCP would only complain about it.
+        if (request.Protocol.SupportsKeyFile() &&
+            PrivateKeyFile.Resolve(credential, settings.UseKeyFile, settings.KeyFilePath) is { } keyFile)
         {
-            arguments.Add($"/privatekey={settings.KeyFilePath}");
+            arguments.Add($"/privatekey={keyFile}");
         }
 
         // Passive mode is an FTP concept; sending it for SFTP or SCP confuses WinSCP.

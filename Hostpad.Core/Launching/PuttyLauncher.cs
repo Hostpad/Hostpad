@@ -50,10 +50,10 @@ public sealed class PuttyLauncher : ILauncher
             arguments.Add(connection.Credential.Password!);
         }
 
-        if (settings.UseKeyFile && !string.IsNullOrWhiteSpace(settings.KeyFilePath))
+        if (PrivateKeyFile.Resolve(connection.Credential, settings.UseKeyFile, settings.KeyFilePath) is { } keyFile)
         {
             arguments.Add("-i");
-            arguments.Add(settings.KeyFilePath);
+            arguments.Add(keyFile);
         }
 
         if (settings.X11Forwarding)

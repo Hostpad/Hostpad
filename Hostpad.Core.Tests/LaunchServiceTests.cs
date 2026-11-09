@@ -108,6 +108,63 @@ public sealed class LaunchServiceTests : IDisposable
         Assert.Contains("-X", plan.Arguments);
     }
 
+    [Fact]
+    public void Putty_PrefersTheConnectionKeyOverTheGlobalOne()
+    {
+        var settings = SettingsWithAllTools();
+        settings.Putty.UseKeyFile = true;
+        settings.Putty.KeyFilePath = @"C:\keys\global.ppk";
+        var connection = Server();
+        connection.Credential.PrivateKeyPath = @"C:\keys\customer.ppk";
+
+        var arguments = Plan(connection, Protocol.Ssh, settings).Arguments;
+
+        Assert.Contains(@"C:\keys\customer.ppk", arguments);
+        Assert.DoesNotContain(@"C:\keys\global.ppk", arguments);
+    }
+
+    [Fact]
+    public void Putty_UsesTheConnectionKeyEvenWithTheGlobalKeySwitchedOff()
+    {
+        var connection = Server();
+        connection.Credential.PrivateKeyPath = @"C:\keys\customer.ppk";
+
+        var arguments = Plan(connection, Protocol.Ssh, SettingsWithAllTools()).Arguments;
+
+        Assert.Equal(@"C:\keys\customer.ppk", arguments[arguments.ToList().IndexOf("-i") + 1]);
+    }
+
+    [Theory]
+    [InlineData(Protocol.Sftp)]
+    [InlineData(Protocol.Scp)]
+    public void WinScp_PrefersTheConnectionKeyOverTheGlobalOne(Protocol protocol)
+    {
+        var settings = SettingsWithAllTools();
+        settings.WinScp.UseKeyFile = true;
+        settings.WinScp.KeyFilePath = @"C:\keys\global.ppk";
+        var connection = Server();
+        connection.Credential.PrivateKeyPath = @"C:\keys\customer.ppk";
+
+        var arguments = Plan(connection, protocol, settings).Arguments;
+
+        Assert.Contains(@"/privatekey=C:\keys\customer.ppk", arguments);
+        Assert.DoesNotContain(@"/privatekey=C:\keys\global.ppk", arguments);
+    }
+
+    [Fact]
+    public void WinScp_SendsNoKeyForFtp()
+    {
+        var settings = SettingsWithAllTools();
+        settings.WinScp.UseKeyFile = true;
+        settings.WinScp.KeyFilePath = @"C:\keys\global.ppk";
+        var connection = Server();
+        connection.Credential.PrivateKeyPath = @"C:\keys\customer.ppk";
+
+        Assert.DoesNotContain(
+            Plan(connection, Protocol.Ftp, settings).Arguments,
+            a => a.StartsWith("/privatekey", StringComparison.Ordinal));
+    }
+
     [Theory]
     [InlineData(Protocol.Sftp, "sftp")]
     [InlineData(Protocol.Scp, "scp")]

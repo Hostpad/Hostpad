@@ -54,7 +54,50 @@
                                 HorizontalAlignment="Left"
                                 Click="OnShowNotices" />
 
-            <ui:Button Content="Close"
+            <!-- Updates. Nothing here touches the network until a button is
+                 pressed, unless the startup check in Options is switched on. -->
+            <Border Margin="0,14,0,0"
+                    Padding="0,12,0,0"
+                    BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                    BorderThickness="0,1,0,0">
+                <StackPanel>
+                    <TextBlock x:Name="UpdateStatus"
+                               Text="Hostpad only looks for updates when you ask it to, or at startup if you turn that on in Options."
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Margin="0,0,0,8" />
+
+                    <ProgressBar x:Name="UpdateProgress"
+                                 Height="4"
+                                 Minimum="0"
+                                 Maximum="1"
+                                 Margin="0,0,0,8"
+                                 Visibility="Collapsed" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <ui:Button x:Name="CheckButton"
+                                   Content="Check for updates"
+                                   Icon="{ui:SymbolIcon ArrowSync24}"
+                                   Click="OnCheckForUpdates" />
+                        <ui:Button x:Name="InstallButton"
+                                   Appearance="Primary"
+                                   Icon="{ui:SymbolIcon ArrowDownload24}"
+                                   Margin="6,0,0,0"
+                                   Visibility="Collapsed"
+                                   Click="OnInstallUpdate" />
+                    </StackPanel>
+
+                    <ui:HyperlinkButton x:Name="ReleaseLink"
+                                        Content="What is new in this release"
+                                        Padding="0,4"
+                                        Margin="0,4,0,0"
+                                        HorizontalAlignment="Left"
+                                        Visibility="Collapsed" />
+                </StackPanel>
+            </Border>
+
+            <ui:Button x:Name="CloseButton"
+                       Content="Close"
                        Appearance="Primary"
                        HorizontalAlignment="Right"
                        Padding="18,5"

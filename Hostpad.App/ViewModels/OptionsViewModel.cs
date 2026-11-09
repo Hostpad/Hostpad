@@ -19,6 +19,9 @@ public sealed partial class OptionsViewModel : ObservableObject
     private bool _groupConnections;
 
     [ObservableProperty]
+    private bool _checkForUpdatesOnStartup;
+
+    [ObservableProperty]
     private bool _useMasterPassword;
 
     [ObservableProperty]
@@ -102,6 +105,7 @@ public sealed partial class OptionsViewModel : ObservableObject
 
         Theme = settings.Theme;
         GroupConnections = settings.GroupConnections;
+        CheckForUpdatesOnStartup = settings.CheckForUpdatesOnStartup;
 
         UseMasterPassword = session.HasMasterPassword;
         AskAtStartup = settings.RequirePasswordOnStartup;
@@ -187,6 +191,7 @@ public sealed partial class OptionsViewModel : ObservableObject
 
         settings.Theme = Theme;
         settings.GroupConnections = GroupConnections;
+        settings.CheckForUpdatesOnStartup = CheckForUpdatesOnStartup;
         settings.RequirePasswordOnStartup = UseMasterPassword && AskAtStartup;
 
         settings.Putty.Path = PuttyPath.Trim();

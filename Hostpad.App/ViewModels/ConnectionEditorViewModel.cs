@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Hostpad.Core.Launching;
 using Hostpad.Core.Model;
 
 namespace Hostpad.App.ViewModels;
@@ -30,7 +31,20 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
     private string _notes = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(KeyWarning))]
     private Protocol _protocol = Protocol.Ssh;
+
+    /// <summary>Overrides the global key from Options for this connection only.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(KeyWarning))]
+    private string _privateKeyPath = string.Empty;
+
+    /// <summary>
+    /// Open when the connection already has something in it, so a key set
+    /// months ago is not hidden behind a closed section.
+    /// </summary>
+    [ObservableProperty]
+    private bool _isAdvancedExpanded;
 
     [ObservableProperty]
     private bool _hasConnection;
@@ -44,7 +58,7 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
     /// property changes would also fire when the form is being populated, and
     /// would ask about changes the user never made.
     /// </summary>
-    private (string Name, string Host, string Username, string Password, string Notes, Protocol Protocol) _loaded;
+    private (string Name, string Host, string Username, string Password, string Notes, Protocol Protocol, string PrivateKeyPath) _loaded;
 
     public bool IsDirty =>
         HasConnection &&
@@ -53,7 +67,38 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
          Username != _loaded.Username ||
          Password != _loaded.Password ||
          Notes != _loaded.Notes ||
-         Protocol != _loaded.Protocol);
+         Protocol != _loaded.Protocol ||
+         PrivateKeyPath != _loaded.PrivateKeyPath);
+
+    /// <summary>
+    /// Advice shown under the key field, never a block: the user may know
+    /// better, or be about to change the type. Customers tend to hand over
+    /// exactly the format PuTTY refuses, and PuTTY's own error does not say why.
+    /// </summary>
+    public string? KeyWarning
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PrivateKeyPath))
+            {
+                return null;
+            }
+
+            if (!Protocol.SupportsKeyFile())
+            {
+                return $"{Protocol.DisplayName()} does not use a private key; it is ignored for this type.";
+            }
+
+            if (!System.IO.File.Exists(PrivateKeyPath.Trim()))
+            {
+                return "File not found.";
+            }
+
+            return PrivateKeyFile.DetectFormat(PrivateKeyPath) is PrivateKeyFormat.OpenSsh
+                ? "This is an OpenSSH key, which PuTTY and WinSCP do not load. Convert it to .ppk with PuTTYgen."
+                : null;
+        }
+    }
 
     public void Load(Connection? connection)
     {
@@ -66,12 +111,14 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
         Password = connection?.Credential.Password ?? string.Empty;
         Notes = connection?.Notes ?? string.Empty;
         Protocol = connection?.Protocol ?? Protocol.Ssh;
+        PrivateKeyPath = connection?.Credential.PrivateKeyPath ?? string.Empty;
+        IsAdvancedExpanded = !string.IsNullOrWhiteSpace(PrivateKeyPath);
 
         MarkClean();
     }
 
     /// <summary>Treats the current contents as saved, after applying or discarding.</summary>
-    public void MarkClean() => _loaded = (Name, Host, Username, Password, Notes, Protocol);
+    public void MarkClean() => _loaded = (Name, Host, Username, Password, Notes, Protocol, PrivateKeyPath);
 
     /// <summary>Writes the form back onto the connection. Returns false when the form is not valid.</summary>
     public bool ApplyTo(Connection connection)
@@ -91,6 +138,7 @@ public sealed partial class ConnectionEditorViewModel : ObservableObject
         connection.Protocol = Protocol;
         connection.Credential.Username = NullIfBlank(Username);
         connection.Credential.Password = NullIfBlank(Password);
+        connection.Credential.PrivateKeyPath = NullIfBlank(PrivateKeyPath)?.Trim();
         connection.Notes = NullIfBlank(Notes);
         connection.ModifiedUtc = DateTimeOffset.UtcNow;
 

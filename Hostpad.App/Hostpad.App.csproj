@@ -21,6 +21,19 @@
     <ProjectReference Include="..\Hostpad.Core\Hostpad.Core.csproj" />
   </ItemGroup>
 
+  <!--
+    Which of the release downloads this build is (Folder, Standalone or
+    SingleFile), passed by the release workflow. The updater uses it to replace
+    a copy with the same kind of file; a build without it never updates itself.
+  -->
+  <ItemGroup Condition="'$(HostpadDistribution)' != ''">
+    <AssemblyMetadata Include="HostpadDistribution" Value="$(HostpadDistribution)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Hostpad.App.Tests" />
+  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="Assets\hostpad.png" />
     <Resource Include="Assets\hostpad.ico" />

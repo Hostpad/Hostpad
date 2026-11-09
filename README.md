@@ -71,6 +71,8 @@ twenty clients, and why this is a rewrite rather than a fork — is written up a
 - SSH jump hosts as real fields, tunnelled through plink, instead of a proxy
   string smuggled into the username
 - Private key authentication, post-login commands and X11 forwarding for PuTTY
+- A private key per connection, for the server whose key came from a customer,
+  overriding the one set in Options
 - Screen size, mounted drives, multiple monitors and admin sessions for Remote
   Desktop
 - Full screen and view-only for VNC, passive mode for FTP
@@ -165,6 +167,19 @@ publishes:
 ```bash
 winget install Hostpad.Hostpad
 ```
+
+### Updating
+
+**About → Check for updates** asks GitHub for the latest release. Hostpad makes
+no other network calls, and makes this one only when asked, or at startup if
+you turn that on in Options.
+
+When there is a newer release, **Update** downloads the same kind of file you
+are running, checks it against the SHA-256 GitHub recorded when the release was
+published, discards it if it does not match, and restarts. A copy installed
+with Scoop or winget is left to its package manager instead: Hostpad closes and
+runs `scoop update hostpad` or `winget upgrade Hostpad.Hostpad` in a console,
+so the package manager keeps track of the version it installed.
 
 ## Building
 

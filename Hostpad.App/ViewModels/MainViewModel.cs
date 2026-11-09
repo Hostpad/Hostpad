@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hostpad.App.Services;
+using Hostpad.App.Services.Updates;
 using Hostpad.Core.Launching;
 using Hostpad.Core.Model;
 using Hostpad.Core.Storage;
@@ -37,6 +38,36 @@ public sealed partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _groupConnections = true;
+
+    /// <summary>A newer release found by the startup check, offered in the status bar.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(UpdateNotice))]
+    [NotifyPropertyChangedFor(nameof(HasUpdate))]
+    private ReleaseInfo? _availableUpdate;
+
+    public bool HasUpdate => AvailableUpdate is not null;
+
+    public string? UpdateNotice =>
+        AvailableUpdate is { } release ? $"Hostpad {release.Version.ToString(3)} is available" : null;
+
+    /// <summary>
+    /// Runs only when the user switched it on in Options. Any failure is
+    /// silent: the status bar simply shows nothing, which is also what it shows
+    /// when Hostpad is up to date.
+    /// </summary>
+    public async Task CheckForUpdatesOnStartupAsync()
+    {
+        if (!_session.Settings.CheckForUpdatesOnStartup)
+        {
+            return;
+        }
+
+        if (await UpdateService.GetLatestReleaseAsync() is { } release &&
+            release.Version > UpdateService.CurrentVersion)
+        {
+            AvailableUpdate = release;
+        }
+    }
 
     public MainViewModel(VaultSession session, IProcessRunner? runner = null, LaunchService? launcher = null)
     {

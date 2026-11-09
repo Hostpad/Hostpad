@@ -10,6 +10,29 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+### Added
+
+- A private key file per connection, under **Advanced settings** in the
+  connection editor. It takes precedence over the key in Options, which still
+  covers every connection without one of its own, so the server whose key came
+  from a customer no longer means changing a global setting and changing it
+  back. If the file is an OpenSSH or PEM key, which PuTTY and WinSCP do not
+  load, the editor says so and points to PuTTYgen.
+- Hostpad can update itself. **About → Check for updates** asks GitHub for the
+  latest release, and **Update** downloads it, checks it against the SHA-256
+  GitHub published for it, and restarts. Copies installed with Scoop or winget
+  are updated through their package manager instead. There is also an option to
+  check at startup, off unless you turn it on: Hostpad makes no network calls
+  otherwise.
+
+### Changed
+
+- Starting Hostpad while it is already running brings the open window forward,
+  restoring it if it was minimised. Before, the second launch simply exited,
+  which looked as if the double click had done nothing.
+- WinSCP no longer receives a private key for FTP sessions, which have no use
+  for one.
+
 ### Fixed
 
 - Pointing at a connection lit up its folder as well, as if both were under the

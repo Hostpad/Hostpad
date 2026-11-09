@@ -37,7 +37,13 @@ public partial class MainWindow : FluentWindow
 
         InitializeComponent();
         RestoreWindowState();
+
+        // After the window is up, so a slow network never delays it.
+        ContentRendered += async (_, _) => await ViewModel.CheckForUpdatesOnStartupAsync();
     }
+
+    private void OnShowUpdate(object sender, RoutedEventArgs e) =>
+        new AboutWindow(ViewModel.AvailableUpdate) { Owner = this }.ShowDialog();
 
     /// <summary>
     /// Puts the window back where it was. A saved position is only honoured if
@@ -384,6 +390,38 @@ public partial class MainWindow : FluentWindow
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             MessageBox.Show(this, ex.Message, "Export failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    /// <summary>
+    /// All files are offered first: the file a customer hands over is as often
+    /// an id_rsa or a .pem as a .ppk, and the editor says when it needs converting.
+    /// </summary>
+    private void OnBrowsePrivateKey(object sender, RoutedEventArgs e)
+    {
+        var current = ViewModel.Editor.PrivateKeyPath.Trim();
+        var dialog = new OpenFileDialog
+        {
+            Title = "Private key file",
+            Filter = "All files (*.*)|*.*|PuTTY key (*.ppk)|*.ppk",
+            CheckFileExists = true,
+        };
+
+        try
+        {
+            if (System.IO.Path.GetDirectoryName(current) is { Length: > 0 } directory && System.IO.Directory.Exists(directory))
+            {
+                dialog.InitialDirectory = directory;
+            }
+        }
+        catch (ArgumentException)
+        {
+            // Whatever was typed is not a path; start from the default folder.
+        }
+
+        if (dialog.ShowDialog(this) == true)
+        {
+            ViewModel.Editor.PrivateKeyPath = dialog.FileName;
         }
     }
 

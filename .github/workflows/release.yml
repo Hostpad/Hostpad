@@ -49,7 +49,8 @@ jobs:
             --runtime win-x64 `
             --self-contained false `
             --output publish/Hostpad `
-            -p:Version=${{ steps.version.outputs.version }}
+            -p:Version=${{ steps.version.outputs.version }} `
+            -p:HostpadDistribution=Folder
 
       # The MIT licences of the bundled libraries ask for their notices to
       # travel with the software, so the notices ship inside the archive.
@@ -80,6 +81,7 @@ jobs:
             --self-contained true `
             --output publish/standalone `
             -p:Version=${{ steps.version.outputs.version }} `
+            -p:HostpadDistribution=Standalone `
             -p:PublishSingleFile=true `
             -p:IncludeNativeLibrariesForSelfExtract=true `
             -p:EnableCompressionInSingleFile=true
@@ -101,6 +103,7 @@ jobs:
             --self-contained false `
             --output publish/singlefile `
             -p:Version=${{ steps.version.outputs.version }} `
+            -p:HostpadDistribution=SingleFile `
             -p:PublishSingleFile=true `
             -p:IncludeNativeLibrariesForSelfExtract=true
 

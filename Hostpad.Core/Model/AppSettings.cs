@@ -54,6 +54,13 @@ public sealed class AppSettings
     /// <summary>Show the list grouped by folder rather than as one flat list.</summary>
     public bool GroupConnections { get; set; } = true;
 
+    /// <summary>
+    /// Ask GitHub for the latest release when Hostpad starts. Off unless the
+    /// user turns it on: Hostpad otherwise makes no network calls at all, and
+    /// runs on networks where an unannounced one would be a phone-home.
+    /// </summary>
+    public bool CheckForUpdatesOnStartup { get; set; }
+
     public string ToolPathFor(Protocol protocol) => protocol switch
     {
         Protocol.Ssh => Putty.Path,

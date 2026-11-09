@@ -105,6 +105,10 @@
 
                         <TextBlock Text="Other" Style="{StaticResource Section}" />
                         <CheckBox Content="Group connections by folder" IsChecked="{Binding GroupConnections}" />
+                        <CheckBox Content="Check for updates when Hostpad starts"
+                                  ToolTip="Asks GitHub for the latest release. Nothing is downloaded until you choose to update."
+                                  Margin="0,6,0,0"
+                                  IsChecked="{Binding CheckForUpdatesOnStartup}" />
 
                         <Border Margin="0,14,0,0"
                                 Padding="10"

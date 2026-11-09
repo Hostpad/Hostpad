@@ -288,6 +288,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="0,0,0,8">
@@ -351,9 +352,48 @@
                                 VerticalScrollBarVisibility="Auto" />
                 </StackPanel>
 
+                <!-- Below the notes and folded away: most connections never
+                     need it, and the fields above are the ones used daily. -->
+                <Expander Grid.Row="5"
+                          Header="Advanced settings"
+                          IsExpanded="{Binding Editor.IsAdvancedExpanded}"
+                          Margin="0,0,0,8">
+                    <StackPanel Margin="0,4,0,0">
+                        <TextBlock Text="Private key file" Style="{StaticResource FieldLabel}" />
+                        <DockPanel>
+                            <ui:Button DockPanel.Dock="Right"
+                                       Icon="{ui:SymbolIcon FolderOpen24}"
+                                       ToolTip="Browse"
+                                       Margin="6,0,0,0"
+                                       VerticalAlignment="Stretch"
+                                       Click="OnBrowsePrivateKey" />
+                            <ui:TextBox Text="{Binding Editor.PrivateKeyPath, UpdateSourceTrigger=PropertyChanged}"
+                                        ClearButtonEnabled="False"
+                                        PlaceholderText="Uses the key from Options, if one is set" />
+                        </DockPanel>
+                        <TextBlock Text="{Binding Editor.KeyWarning}"
+                                   Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,4,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Trigger>
+                                        <Trigger Property="Text" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Expander>
+
                 <!-- Editing on the left, connecting on the right: they are
                      different kinds of action and sat too close together. -->
-                <Grid Grid.Row="5" Margin="0,0,0,8">
+                <Grid Grid.Row="6" Margin="0,0,0,8">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <ui:Button Style="{StaticResource ToolButton}"
                                    Icon="{ui:SymbolIcon Save24}"
@@ -386,9 +426,17 @@
                 BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                 BorderThickness="0,1,0,0"
                 Padding="12,5">
-            <TextBlock Text="{Binding StatusText}"
-                       FontSize="11"
-                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+            <DockPanel>
+                <ui:HyperlinkButton DockPanel.Dock="Right"
+                                    Content="{Binding UpdateNotice}"
+                                    FontSize="11"
+                                    Padding="0"
+                                    Click="OnShowUpdate"
+                                    Visibility="{Binding HasUpdate, Converter={StaticResource BoolToVisibility}}" />
+                <TextBlock Text="{Binding StatusText}"
+                           FontSize="11"
+                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+            </DockPanel>
         </Border>
     </Grid>
 

@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Windows;
 using Hostpad.App.Services;
+using Hostpad.App.Services.Updates;
 using Hostpad.App.ViewModels;
 using Hostpad.Core.Model;
 using Hostpad.Core.Security;
@@ -10,21 +11,22 @@ namespace Hostpad.App;
 
 public partial class App : Application
 {
-    /// <summary>Named so a second launch can detect the first and hand focus over.</summary>
-    private const string InstanceMutexName = @"Local\Hostpad.SingleInstance";
-
-    private static Mutex? _instanceMutex;
+    private static SingleInstance? _instance;
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        _instanceMutex = new Mutex(initiallyOwned: true, InstanceMutexName, out var isFirstInstance);
+        UpdateInstaller.WaitForPreviousInstance(e.Args);
 
-        if (!isFirstInstance)
+        _instance = SingleInstance.TryAcquire();
+
+        if (_instance is null)
         {
-            // TODO: signal the running instance to restore itself before exiting.
+            // The running instance has been asked to come forward.
             Shutdown();
             return;
         }
+
+        _instance.ListenForActivation(() => Dispatcher.BeginInvoke(BringToFront));
 
         base.OnStartup(e);
 
@@ -333,9 +335,39 @@ public partial class App : Application
         }
     }
 
+    /// <summary>
+    /// Restores and activates the newest visible window: the main window, or
+    /// whatever sits on top of it, such as the unlock prompt or Options, which
+    /// is where the user has to answer before anything else works.
+    /// </summary>
+    private void BringToFront()
+    {
+        var windows = Windows.OfType<Window>().Where(w => w.IsVisible).ToList();
+
+        foreach (var window in windows.Where(w => w.WindowState == System.Windows.WindowState.Minimized))
+        {
+            // SW_RESTORE puts a maximised window back maximised, which setting
+            // WindowState to Normal would not.
+            ShowWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle, RestoreCommand);
+        }
+
+        if (windows.LastOrDefault() is not { } target)
+        {
+            return;
+        }
+
+        target.Activate();
+    }
+
+    private const int RestoreCommand = 9;
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    private static extern bool ShowWindow(IntPtr window, int command);
+
     protected override void OnExit(ExitEventArgs e)
     {
-        _instanceMutex?.Dispose();
+        _instance?.Dispose();
         base.OnExit(e);
     }
 }
