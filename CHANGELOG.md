@@ -10,6 +10,8 @@ release notes, so it is written once and read in both places.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-09
+
 ### Added
 
 - A private key file per connection, under **Advanced settings** in the
@@ -149,7 +151,8 @@ First release.
 - Follows the Windows light and dark theme; remembers window position, size and
   pane widths, and refuses to restore onto a monitor that is no longer there.
 
-[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.0.5...develop
+[Unreleased]: https://github.com/Hostpad/Hostpad/compare/v1.1.0...develop
+[1.1.0]: https://github.com/Hostpad/Hostpad/compare/v1.0.5...v1.1.0
 [1.0.5]: https://github.com/Hostpad/Hostpad/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Hostpad/Hostpad/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Hostpad/Hostpad/compare/v1.0.2...v1.0.3
