@@ -13,7 +13,12 @@
 <p align="center">
   <a href="https://github.com/Hostpad/Hostpad/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Hostpad/Hostpad?color=1E62D0&label=release"></a>
   <a href="https://github.com/Hostpad/Hostpad/actions/workflows/build.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/Hostpad/Hostpad/build.yml?branch=develop&label=build"></a>
+  <a href="https://github.com/Hostpad/Hostpad/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/Hostpad/Hostpad/total?color=1E62D0"></a>
   <a href="LICENSE"><img alt="Licence" src="https://img.shields.io/github/license/Hostpad/Hostpad?color=1E62D0"></a>
+  <br>
+  <a href="https://github.com/microsoft/winget-pkgs/tree/master/manifests/h/Hostpad/Hostpad"><img alt="winget" src="https://img.shields.io/winget/v/Hostpad.Hostpad?color=1E62D0&label=winget"></a>
+  <a href="https://github.com/Hostpad/scoop-bucket"><img alt="Scoop" src="https://img.shields.io/scoop/v/hostpad?bucket=https%3A%2F%2Fgithub.com%2FHostpad%2Fscoop-bucket&color=1E62D0&label=scoop"></a>
+  <img alt=".NET 10" src="https://img.shields.io/badge/.NET-10-512BD4">
   <img alt="Windows 10 and 11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-1E62D0">
 </p>
 
